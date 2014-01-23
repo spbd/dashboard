@@ -1,0 +1,9 @@
+{
+  "name": "enb-stub",
+  "version": "0.0.1",
+  "homepage": "https://github.com/unlok/enb-stub",
+  "license": "MIT",
+  "dependencies": {
+    "bem-core": "git@github.com:bem/bem-core.git"
+  }
+}

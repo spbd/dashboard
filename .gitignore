@@ -1,0 +1,9 @@
+node_modules
+.DS_Store
+.idea
+.project
+.svn
+.bem/tmp
+libs
+build/*/*
+!build/*/*.bemjson.js
