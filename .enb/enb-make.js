@@ -4,17 +4,19 @@ var levels = require('enb-bem-techs/techs/levels'),
     provide = require('enb/techs/file-provider'),
     bemdecl = require('enb-bem-techs/techs/bemjson-to-bemdecl'),
     deps = require('enb-bem-techs/techs/deps'),
-    css = require('enb/techs/css');
+    css = require('enb-stylus/techs/css-stylus'),
     js = require('enb-diverse-js/techs/browser-js'),
     ym = require('enb-modules/techs/prepend-modules'),
     borschik = require('enb-borschik/techs/borschik'),
     bhServerInclude = require('enb-bh/techs/bh-server-include'),
-    html = require('enb-bh/techs/html-from-bemjson');
+    bhYm = require('enb-bh/techs/bh-client-module'),
+    html = require('enb-bh/techs/html-from-bemjson'),
+    mergeFiles = require('enb/techs/file-merge');
 
 module.exports = function(config) {
-    config.node('build/index');
+    var node = 'build/dashboard';
 
-    config.nodeMask(/build\/.*/, function(nodeConfig) {
+    config.node(node, function(nodeConfig) {
         nodeConfig.addTechs([
             [provide, {target : '?.bemjson.js'}],
             [levels, {levels: getLevels(config)}],
@@ -27,7 +29,12 @@ module.exports = function(config) {
                 source : '?.source.js',
                 target : '?.ym.js'
             }],
-            [bhServerInclude, {jsAttrName : 'data-bem', jsAttrScheme : 'json'}],
+            [bhServerInclude, {jsAttrName: 'data-bem', jsAttrScheme: 'json'}],
+            [bhYm, {target : '?.client.bh.js', jsAttrName: 'data-bem', jsAttrScheme: 'json'}],
+            [mergeFiles, {
+                target : '?.browser+bh.js',
+                sources : ['?.ym.js', '?.client.bh.js']
+            }],
             [html]
         ]);
 
@@ -35,7 +42,7 @@ module.exports = function(config) {
             nodeConfig.addTechs([
                 [
                     require('enb/techs/file-copy'),
-                    {sourceTarget: '?.ym.js', destTarget: '?.browser.js'}
+                    {sourceTarget: '?.browser+bh.js', destTarget: '_?.js'}
                 ],
                 [
                     require('enb/techs/file-copy'),
@@ -44,10 +51,7 @@ module.exports = function(config) {
             ]);
         });
 
-        nodeConfig.addTargets([
-            '?.browser.js', '?.css', '?.bh.js', '?.html'
-        ]);
-
+        nodeConfig.addTargets(['_?.js', '_?.css', '?.html']);
     });
 
 };
@@ -55,7 +59,9 @@ module.exports = function(config) {
 function getLevels(config) {
     return [
         'libs/bem-core/common.blocks',
-        'blocks',
+        'libs/bem-core/desktop.blocks',
+        'uicore',
+        'widgets',
     ].map(function(level) {
         return config.resolvePath(level);
     });

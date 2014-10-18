@@ -1,9 +1,7 @@
 node_modules
 .DS_Store
 .idea
-.project
-.svn
-.bem/tmp
+.enb/tmp
 libs
 build/*/*
 !build/*/*.bemjson.js
