@@ -1,7 +1,7 @@
 modules.define(
     'navigator',
-    ['i-bem__dom','jquery', 'bh', 'next-tick'],
-    function(provide, BEMDOM, $, bh, tick) {
+    ['i-bem__dom','jquery', 'bh'],
+    function(provide, BEMDOM, $, bh) {
 
 BEMDOM.decl(this.name, {
 

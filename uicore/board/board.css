@@ -1,6 +1,6 @@
-.ui-container
+.board
 {
-    background: url('ui-container.jpg');
+    background: url('board.jpg');
     background-size: cover;
     background-position: center;
     width: 100%;

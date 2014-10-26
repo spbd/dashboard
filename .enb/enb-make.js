@@ -11,7 +11,9 @@ var levels = require('enb-bem-techs/techs/levels'),
     bhServerInclude = require('enb-bh/techs/bh-server-include'),
     bhYm = require('enb-bh/techs/bh-client-module'),
     html = require('enb-bh/techs/html-from-bemjson'),
-    mergeFiles = require('enb/techs/file-merge');
+    mergeFiles = require('enb/techs/file-merge'),
+    depsMerge = require('enb/techs/deps-merge'),
+    widgetsDeps = require('./techs/widgets-deps');
 
 module.exports = function(config) {
     var node = 'build/dashboard';
@@ -21,7 +23,8 @@ module.exports = function(config) {
             [provide, {target : '?.bemjson.js'}],
             [levels, {levels: getLevels(config)}],
             [files],
-            [deps],
+            [deps, {target: '?.project.deps.js'}],
+            [widgetsDeps, {source: '?.project.deps.js'}],
             [bemdecl],
             [css],
             [js, { target : '?.source.js' }],

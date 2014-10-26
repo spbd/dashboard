@@ -9,7 +9,7 @@
         { elem: 'meta', attrs: { name: 'keywords', content: '' }}
     ],
     content: {
-        block: 'ui-container',
+        block: 'board',
         content: {block: 'navigator'}
     }
 });
