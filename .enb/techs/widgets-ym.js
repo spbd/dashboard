@@ -1,5 +1,4 @@
-var vfs = require('enb/lib/fs/async-fs'),
-    asyncRequire = require('enb/lib/fs/async-require'),
+var asyncRequire = require('enb/lib/fs/async-require'),
     path = require('path');
 
 module.exports = require('enb/lib/build-flow').create()
@@ -9,6 +8,7 @@ module.exports = require('enb/lib/build-flow').create()
     .builder(function(widgetsFile) {
         return asyncRequire(widgetsFile)
             .then(function(widgets) {
+                widgets = widgets.map(function(w) {return w.widget;});
                 return [
                     "modules.define('widgets', function(provide) {",
                     "   provide(" + JSON.stringify(widgets) + ");",

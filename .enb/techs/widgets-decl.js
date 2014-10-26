@@ -2,20 +2,20 @@ var asyncRequire = require('enb/lib/fs/async-require'),
     path = require('path');
 
 module.exports = require('enb/lib/build-flow').create()
-    .name('widgets-deps')
-    .target('target', '?.deps.js')
+    .name('widgets-decl')
+    .target('target', '?.bemdecl.js')
     .useSourceFilename('source', '?')
     .useSourceFilename('widgets-list', '?.widgets-list.js')
-    .builder(function(depsFile, widgetsFile) {
-        return asyncRequire(depsFile)
-            .then(function(depsModule) {
+    .builder(function(declFile, widgetsFile) {
+        return asyncRequire(declFile)
+            .then(function(declModule) {
                 return asyncRequire(widgetsFile)
                     .then(function(widgets) {
                         widgets.forEach(function(widget) {
-                            depsModule.deps.push({block: widget});
+                            declModule.blocks.push({name: widget});
                         });
-                        return 'exports.deps = ' +
-                            JSON.stringify(depsModule.deps, null, 4) +
+                        return 'exports.blocks = ' +
+                            JSON.stringify(declModule.blocks, null, 4) +
                             ';';
                     });
             });

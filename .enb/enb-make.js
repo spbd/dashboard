@@ -13,24 +13,26 @@ var levels = require('enb-bem-techs/techs/levels'),
     html = require('enb-bh/techs/html-from-bemjson'),
     mergeFiles = require('enb/techs/file-merge'),
     depsMerge = require('enb/techs/deps-merge'),
-    widgetsList = require('./techs/widgets-list');
-    widgetsDeps = require('./techs/widgets-deps');
+    widgetsList = require('./techs/widgets-list'),
+    widgetsDecl = require('./techs/widgets-decl'),
     widgetsYm = require('./techs/widgets-ym');
+    widgetsManifest = require('./techs/widgets-manifest');
 
 module.exports = function(config) {
     var node = 'build/dashboard';
 
     config.node(node, function(nodeConfig) {
         nodeConfig.addTechs([
-            [provide, {target : '?.bemjson.js'}],
-            [levels, {levels: getLevels(config)}],
             [files],
-            [deps, {target: '?.project.deps.js'}],
-            [widgetsDeps, {source: '?.project.deps.js'}],
+            [levels, {levels: getLevels(config)}],
+            [provide, {target : '?.bemjson.js'}],
+            [deps],
+            [bemdecl, {target: '?.project.bemdecl.js'}],
+            [widgetsDecl, {source: '?.project.bemdecl.js'}],
             [widgetsList],
             [widgetsYm],
-            [bemdecl],
-            [css],
+            [widgetsManifest],
+            [css, {target: '?.source.css'}],
             [js, { target : '?.source.js' }],
             [ym, {
                 source : '?.source.js',
@@ -41,6 +43,10 @@ module.exports = function(config) {
             [mergeFiles, {
                 target : '?.browser+bh+widgets.js',
                 sources : ['?.ym.js', '?.client.bh.js', '?.widgets-ym.js']
+            }],
+            [mergeFiles, {
+                target : '?.css',
+                sources : ['?.source.css', '?.manifest.css']
             }],
             [html]
         ]);
@@ -58,7 +64,12 @@ module.exports = function(config) {
             ]);
         });
 
-        nodeConfig.addTargets(['_?.js', '_?.css', '?.html']);
+        nodeConfig.addTargets([
+            '_?.js',
+            '_?.css',
+            '?.html'
+        ]);
+
     });
 
 };
@@ -68,7 +79,7 @@ function getLevels(config) {
         'libs/bem-core/common.blocks',
         'libs/bem-core/desktop.blocks',
         'uicore',
-        'widgets',
+        'widgets'
     ].map(function(level) {
         return config.resolvePath(level);
     });
