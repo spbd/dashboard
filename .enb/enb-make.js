@@ -13,7 +13,9 @@ var levels = require('enb-bem-techs/techs/levels'),
     html = require('enb-bh/techs/html-from-bemjson'),
     mergeFiles = require('enb/techs/file-merge'),
     depsMerge = require('enb/techs/deps-merge'),
+    widgetsList = require('./techs/widgets-list');
     widgetsDeps = require('./techs/widgets-deps');
+    widgetsYm = require('./techs/widgets-ym');
 
 module.exports = function(config) {
     var node = 'build/dashboard';
@@ -25,6 +27,8 @@ module.exports = function(config) {
             [files],
             [deps, {target: '?.project.deps.js'}],
             [widgetsDeps, {source: '?.project.deps.js'}],
+            [widgetsList],
+            [widgetsYm],
             [bemdecl],
             [css],
             [js, { target : '?.source.js' }],
@@ -35,8 +39,8 @@ module.exports = function(config) {
             [bhServerInclude, {jsAttrName: 'data-bem', jsAttrScheme: 'json'}],
             [bhYm, {target : '?.client.bh.js', jsAttrName: 'data-bem', jsAttrScheme: 'json'}],
             [mergeFiles, {
-                target : '?.browser+bh.js',
-                sources : ['?.ym.js', '?.client.bh.js']
+                target : '?.browser+bh+widgets.js',
+                sources : ['?.ym.js', '?.client.bh.js', '?.widgets-ym.js']
             }],
             [html]
         ]);
@@ -45,7 +49,7 @@ module.exports = function(config) {
             nodeConfig.addTechs([
                 [
                     require('enb/techs/file-copy'),
-                    {sourceTarget: '?.browser+bh.js', destTarget: '_?.js'}
+                    {sourceTarget: '?.browser+bh+widgets.js', destTarget: '_?.js'}
                 ],
                 [
                     require('enb/techs/file-copy'),
