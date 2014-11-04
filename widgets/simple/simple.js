@@ -31,10 +31,14 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                                 {val: '2', text: 't2', checked: true},
                                 {val: '3', text: 't3'},
                             ], handler: this._onInputChange, label: 'Trolololo'});
+                    })
+                    .onSaveSettings(function(controls) {
+                        console.log('Settings save', controls);
+                    })
+                    .onShowSettings(function() {
+                        console.log('Settings show');
                     });
-                    // .onSettingsShow(function() {
-                    //     console.log('Settings show');
-                    // });
+
 
                     // board.notify('Simple: bad connection');
             }

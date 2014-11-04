@@ -27,9 +27,10 @@ OPTIONS[TYPE.SELECT] = {
     handler: null
 };
 
-var instances = [];
 
 provide(BEMDOM.decl({
+
+    _controls: [],
 
     onSetMod: {
         js: {
@@ -76,7 +77,7 @@ provide(BEMDOM.decl({
                 var ctx = BEMDOM.append(container, bh.apply(this._getControlData(control))),
                     instance = this.findBlockInside(ctx, control.type);
 
-                instances.push({
+                this._controls.push({
                     type: control.type,
                     instance: instance
                 });
@@ -104,6 +105,16 @@ provide(BEMDOM.decl({
                         break;
                 }
             }, this);
+    },
+
+    getStates: function() {
+        return this._controls.map(function(control) {
+            switch(control.type) {
+                case TYPE.INPUT: return control.instance.getVal();
+                case TYPE.CHECKBOX: return Boolean(control.instance.getMod('checked'));
+                case TYPE.SELECT: return control.instance.getVal();
+            }
+        });
     },
 
     _getControlData: function(control) {
