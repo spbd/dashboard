@@ -11,15 +11,33 @@ module.exports = function(bh) {
                     content: [
                         {
                             elem: 'front',
-                            content: {
-                                block: json.widget,
-                                js: true
-                            }
+                            content: [
+                                {
+                                    elem: 'show-settings',
+                                    content: 'SHOW',
+                                    tag: 'button'
+                                },
+                                {
+                                    block: json.widget,
+                                    js: true
+                                }
+                            ]
                         },
                         {
                             elem: 'settings',
                             js: true,
-                            content: json.widget + ' SETT'
+                            content: [
+                                {elem: 'set-title', content: 'Settings'},
+                                {elem: 'set-controls'},
+                                {
+                                    elem: 'set-save',
+                                    content: {
+                                        block : 'button',
+                                        text : 'save',
+                                        mods : { theme : 'islands', size : 's' }
+                                    }
+                                },
+                            ]
                         }
                     ]
                 }

@@ -78,6 +78,10 @@ function getLevels(config) {
     return [
         'libs/bem-core/common.blocks',
         'libs/bem-core/desktop.blocks',
+        'libs/bem-components/common.blocks',
+        'libs/bem-components/desktop.blocks',
+        'libs/bem-components/design/common.blocks',
+        'libs/bem-components/design/desktop.blocks',
         'uicore',
         'widgets'
     ].map(function(level) {

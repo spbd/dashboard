@@ -4,9 +4,9 @@ modules.define(
     function(provide, inherit, objects, BEMDOM, bh) {
 
 var TYPE = {
-        INPUT: 'INPUT',
-        BUTTON: 'BUTTON',
-        SELECT: 'SELECT'
+        INPUT: 'input',
+        CHECKBOX: 'checkbox',
+        SELECT: 'select'
     },
     OPTIONS = {};
 
@@ -16,11 +16,18 @@ OPTIONS[TYPE.INPUT] = {
     handler: null
 };
 
-OPTIONS[TYPE.BUTTON] = {
+OPTIONS[TYPE.CHECKBOX] = {
     text: 'button',
+    checked : false,
     handler: null
 };
 
+OPTIONS[TYPE.SELECT] = {
+    options: null,
+    handler: null
+};
+
+var instances = [];
 
 provide(BEMDOM.decl({
 
@@ -42,7 +49,7 @@ provide(BEMDOM.decl({
     _pushControl: function(props, type) {
         this._checkOptions(props, type);
         this._config.controls.push({
-            control: type,
+            type: type,
             props: props
         });
     },
@@ -62,14 +69,75 @@ provide(BEMDOM.decl({
     },
 
     buildControls: function() {
-        console.log(this._config);
-        BEMDOM.append(this.domElem, bh.apply([
-            {
-                block : 'button',
-                text : 'Medium',
-                mods : { theme : 'islands', size : 'm' }
-            }
-        ]));
+        var container = this.findElem('set-controls');
+
+        this._config.controls
+            .forEach(function(control) {
+                var ctx = BEMDOM.append(container, bh.apply(this._getControlData(control))),
+                    instance = this.findBlockInside(ctx, control.type);
+
+                instances.push({
+                    type: control.type,
+                    instance: instance
+                });
+
+                if(!control.props.handler) {
+                    return;
+                }
+
+                switch(control.type) {
+                    case TYPE.INPUT:
+                        instance.domElem.on('change', function() {
+                            control.props.handler(instance.getVal(), instance);
+                        });
+                        break;
+                    case TYPE.CHECKBOX:
+                        instance.findElem('control').on('change', function() {
+                            var checked = !Boolean(instance.getMod('checked'));
+                            control.props.handler(checked, instance);
+                        });
+                        break;
+                    case TYPE.SELECT:
+                        instance.on('change', function() {
+                            control.props.handler(instance.getVal(), instance);
+                        });
+                        break;
+                }
+            }, this);
+    },
+
+    _getControlData: function(control) {
+        switch(control.type) {
+            case TYPE.INPUT: return {
+                block: 'widget',
+                elem: 'w-input',
+                label: control.props.label,
+                content: {
+                    block : 'input',
+                    mods : { theme : 'islands', size: 's'},
+                    placeholder : control.props.placeholder
+                }
+            };
+            case TYPE.CHECKBOX: return {
+                    block: 'widget',
+                    elem: 'w-checkbox',
+                    content: {
+                        block : 'checkbox',
+                        text : control.props.text,
+                        mods : { theme : 'islands', size : 'm', checked : control.props.checked}
+                    }
+            };
+            case TYPE.SELECT: return {
+                    block: 'widget',
+                    elem: 'w-select',
+                    label: control.props.label,
+                    content: {
+                        block : 'select',
+                        mods : { mode : 'radio', theme : 'islands', size : 's', width : 'available'},
+                        options : control.props.options
+                    }
+            };
+        }
     },
 
     API: function() {
@@ -85,8 +153,13 @@ provide(BEMDOM.decl({
                     return API;
                 },
 
-                button: function(props) {
-                    _this._pushControl(props, TYPE.BUTTON);
+                checkbox: function(props) {
+                    _this._pushControl(props, TYPE.CHECKBOX);
+                    return API;
+                },
+
+                select: function(props) {
+                    _this._pushControl(props, TYPE.SELECT);
                     return API;
                 }
             };

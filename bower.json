@@ -4,6 +4,7 @@
   "homepage": "https://github.com/unlok/enb-stub",
   "license": "MIT",
   "dependencies": {
-    "bem-core": "git@github.com:bem/bem-core.git"
+    "bem-core": "git@github.com:bem/bem-core.git",
+    "bem-components": "git://github.com/bem/bem-components.git#v2"
   }
 }

@@ -11,31 +11,39 @@ provide(BEMDOM.decl(this.name, {
             API = {
                 configure: function(cb) {
                     _cfg = new Config();
-                    cb(_cfg);
+                    cb.call(_this, _cfg);
                     return API;
                 },
                 settings: function(cb) {
-                    var _settings = _this
-                        .findBlockOutside('widget')
-                        .findElemInstance('settings');
+                    var _widget = _this.findBlockOutside('widget'),
+                        _settings = _widget.findElemInstance('settings');
 
-                    cb(_settings.API());
+                    cb.call(_this, _settings.API());
                     _settings.buildControls();
+
+                    _widget
+                        .findElem('show-settings')
+                        .on('click', _this._onShowSettings.bind(_widget));
+
+
+                    _widget
+                        .findBlockInside(_widget.findElem('set-save'), 'button')
+                        .on('click', _this._onShowContent.bind(_widget));
+
+                    return API;
                 }
             };
 
         return API;
+    },
+
+    _onShowSettings: function() {
+        this.toggleMod(this.findElem('faces'), 'side', 'back');
+    },
+
+    _onShowContent: function() {
+        this.toggleMod(this.findElem('faces'), 'side', 'back');
     }
-
-    // _createSettings: function() {
-    //     // this._settings = this
-    //         // .findBlockOutside('widget')
-    //         // .findElemInstances('settings');
-
-    //     console.log(this);
-    //     // this.settings && this.settings(this._settings);
-    //     // this._settings.buildControls();
-    // }
 
 }));
 
