@@ -30,7 +30,7 @@ BEMDOM.decl(this.name, {
         if(!this._popup) {
             var left = this.elem('switcher').offset().left + (this.elem('switcher').width() / 2) + 3;
             this._popup = BEMDOM.append(
-                this.domElem,
+                BEMDOM.scope,
                 bh.apply({
                     block: 'navigator',
                     elem: 'popup'

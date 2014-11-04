@@ -10,7 +10,7 @@ module.exports = require('enb/lib/build-flow').create()
             .then(function(widgets) {
                 widgets = widgets.map(function(w) {return w.widget;});
                 return [
-                    "modules.define('widgets', function(provide) {",
+                    "modules.define('widgets-list', function(provide) {",
                     "   provide(" + JSON.stringify(widgets) + ");",
                     "});"
                 ].join('\n');

@@ -1,0 +1,38 @@
+.widgets__item:after,
+.widgets__item
+{
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+}
+
+.widgets__item:hover
+{
+    box-shadow: 0 0 15px 0px;
+}
+
+.widgets__item
+{
+    border: 3px solid #080808;
+    transition: box-shadow 0.5s;
+    display: inline-block;
+    margin: 2px 5px;
+}
+
+.widgets__item:after
+{
+    opacity: 0;
+    background-color: #FFF;
+    cursor: pointer;
+    content: '+';
+    position: absolute;
+    font: 60px Tahoma;
+    text-align: center;
+
+    transition: opacity 0.5s
+}
+
+.widgets__item:hover:after
+{
+    opacity: 0.3;
+}

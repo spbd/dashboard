@@ -12,7 +12,7 @@ module.exports = require('enb/lib/build-flow').create()
                 return asyncRequire(widgetsFile)
                     .then(function(widgets) {
                         widgets.forEach(function(widget) {
-                            declModule.blocks.push({name: widget});
+                            declModule.blocks.push({name: widget.widget});
                         });
                         return 'exports.blocks = ' +
                             JSON.stringify(declModule.blocks, null, 4) +

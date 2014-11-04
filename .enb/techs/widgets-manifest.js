@@ -17,7 +17,10 @@ module.exports = require('enb/lib/build-flow').create()
                             "." + widget.widget + '__manifest_preview',
                             "{",
                             "   background-image: url(../../widgets/" +
+                                widget.widget + "/" +
                                 widget.image +");",
+                            "   background-position: center;",
+                            "   background-size: 150%;",
                             "}",
                             ""
                         ].join('\n');
