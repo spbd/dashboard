@@ -69,10 +69,25 @@ provide(BEMDOM.decl({
             });
     },
 
+    getProps: function() {
+        return this._config.props;
+    },
+
+    setLeft: function(left) {
+        this.domElem.css({left: left});
+    },
+
+    setSize: function(width, height) {
+        this.domElem
+            .width(width)
+            .height(height);
+    },
+
     buildControls: function() {
         var container = this.findElem('set-controls');
 
-        this._config.controls
+        this._config
+            .controls
             .forEach(function(control) {
                 var ctx = BEMDOM.append(container, bh.apply(this._getControlData(control))),
                     instance = this.findBlockInside(ctx, control.type);
