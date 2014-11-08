@@ -1,0 +1,54 @@
+.widget
+{
+    &__adds-controls
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        opacity: 0;
+        transition: all .5s
+
+        &:hover
+        {
+            opacity: 1;
+        }
+    }
+
+    &__adds-pane
+    {
+        width: 100%;
+        height: 25px;
+        background: #FFF;
+
+        &:hover
+        {
+            cursor: move;
+        }
+    }
+
+    &__adds-remove,
+    &__adds-settings
+    {
+        position: absolute;
+        top: 3px;
+        left: 4px;
+        font: 9px Verdana;
+        padding: 3px 6px 3px 6px;
+        color: #C2C2C2;
+        cursor: pointer;
+        border: 1px solid #E0DFDF;
+
+        &:hover
+        {
+            background: #eee;
+        }
+    }
+
+    &__adds-settings
+    {
+        left: 35px;
+    }
+}
+
+

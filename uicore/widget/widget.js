@@ -15,23 +15,11 @@ provide(BEMDOM.decl(this.name, {
                     return API;
                 },
                 settings: function(cb) {
-                    var _widget = _this.findBlockOutside('widget'),
-                        _settings = _widget.findElemInstance('settings');
+                    _this._initBaseWidget();
+                    _this._settings = _this._baseWidget.findElemInstance('settings');
 
-                    _this._settings = _settings;
-                    _this._baseWidget = _widget;
-
-                    cb.call(_this, _settings.API());
-
-                    _settings.buildControls();
-
-                    _widget
-                        .findElem('show-settings')
-                        .on('click', _this._onShowSettings.bind(_this, _widget));
-
-                    _widget
-                        .findBlockInside(_widget.findElem('set-save'), 'button')
-                        .on('click', _this._onShowContent.bind(_this, _widget));
+                    cb.call(_this, _this._settings.API());
+                    _this._settings.buildControls();
 
                     return API;
                 },
@@ -48,6 +36,26 @@ provide(BEMDOM.decl(this.name, {
         return API;
     },
 
+    _initBaseWidget: function() {
+
+        // move all event-handling to live section
+
+        this._baseWidget = this.findBlockOutside('widget');
+
+        this._baseWidget
+            .findElem('adds-settings')
+            .on('click', this._onShowSettings.bind(this));
+
+        this._baseWidget
+            .findElem('adds-remove')
+            .on('click', this._onRemove.bind(this));
+
+        this._baseWidget
+            .findBlockInside(this._baseWidget.findElem('set-save'), 'button')
+            .on('click', this._onShowContent.bind(this));
+
+    },
+
     _resizeSettingsWindow: function() {
         var sets = this._settings,
             props = sets.getProps(),
@@ -61,13 +69,29 @@ provide(BEMDOM.decl(this.name, {
     _onShowSettings: function(widget) {
         this._resizeSettingsWindow();
 
-        widget.toggleMod(widget.findElem('faces'), 'side', 'back');
+        // hide front controls
+        this._baseWidget.findElem('front').fadeOut(600);
+
+        this._baseWidget.toggleMod(this._baseWidget.findElem('faces'), 'side', 'back');
         this._onShowSettingsCb && this._onShowSettingsCb();
     },
 
     _onShowContent: function(widget) {
-        widget.toggleMod(widget.findElem('faces'), 'side', 'back');
+
+        // shown front controls
+        this._baseWidget.findElem('front').fadeIn(600);
+
+        this._baseWidget.toggleMod(this._baseWidget.findElem('faces'), 'side', 'back');
         this._onSaveSettingsCb && this._onSaveSettingsCb(this._settings.getStates());
+    },
+
+    _onRemove: function() {
+        this._baseWidget
+            .domElem
+            .animate({opacity: 0}, 1000, function() {
+                this._settings.destruct();
+                BEMDOM.destruct(this._baseWidget.domElem);
+            }.bind(this));
     }
 
 }));

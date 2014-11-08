@@ -166,6 +166,12 @@ provide(BEMDOM.decl({
         }
     },
 
+    destruct: function() {
+        this._controls.forEach(function(control) {
+            BEMDOM.destruct(control.instance.domElem);
+        });
+    },
+
     API: function() {
         var _this = this,
             API = {

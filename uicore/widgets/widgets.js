@@ -27,8 +27,7 @@ provide(BEMDOM.decl(this.name, {
     _createWidgetInstance: function(event) {
         var widgetName = this.elemParams(event.currentTarget).widget;
 
-        BEMDOM
-            .append(BEMDOM.scope, bh.apply({block: 'widget', widget: widgetName}));
+        BEMDOM.append(BEMDOM.scope, bh.apply({block: 'widget', widget: widgetName}));
     }
 
 }, {

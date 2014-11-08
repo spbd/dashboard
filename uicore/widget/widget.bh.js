@@ -13,9 +13,22 @@ module.exports = function(bh) {
                             elem: 'front',
                             content: [
                                 {
-                                    elem: 'show-settings',
-                                    content: 'SHOW',
-                                    tag: 'button'
+                                    elem: 'adds-controls',
+                                    content: [
+                                        {elem: 'adds-pane'},
+                                        {
+                                            elem: 'adds-remove',
+                                            content: 'DEL'
+                                        },
+                                        {
+                                            elem: 'adds-settings',
+                                            content: 'SET'
+                                        },
+                                        {
+                                            elem: 'adds-resize',
+                                            content: '<->'
+                                        }
+                                    ]
                                 },
                                 {
                                     block: json.widget,
