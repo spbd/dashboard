@@ -35,7 +35,6 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                         console.log('Settings show');
                     });
 
-
                     // board.notify('Simple: bad connection');
             }
         }

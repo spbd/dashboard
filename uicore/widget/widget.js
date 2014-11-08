@@ -18,6 +18,8 @@ provide(BEMDOM.decl(this.name, {
                     _this._initBaseWidget();
                     _this._settings = _this._baseWidget.findElemInstance('settings');
 
+                    console.log(_this._settings);
+
                     cb.call(_this, _this._settings.API());
                     _this._settings.buildControls();
 
@@ -89,7 +91,8 @@ provide(BEMDOM.decl(this.name, {
     _onRemove: function() {
         this._baseWidget
             .domElem
-            .animate({opacity: 0}, 1000, function() {
+            .animate({opacity: 0}, 500, function() {
+                console.log(this._settings._controls);
                 this._settings.destruct();
                 BEMDOM.destruct(this._baseWidget.domElem);
             }.bind(this));

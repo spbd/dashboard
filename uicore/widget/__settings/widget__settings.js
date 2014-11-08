@@ -30,11 +30,11 @@ OPTIONS[TYPE.SELECT] = {
 
 provide(BEMDOM.decl({
 
-    _controls: [],
-
     onSetMod: {
         js: {
             inited: function() {
+                this._controls = [];
+
                 this._config = {
                     // Default porperties
                     props: {
