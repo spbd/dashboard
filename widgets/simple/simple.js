@@ -11,7 +11,8 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                 this
                     .widgetAPI()
                     .configure(function(config) {
-                        config.setProps({glueToGrid: true, multiple: true});
+                        // width, height
+                        // config.setProps({});
                     })
                     .settings(function(constructor) {
                         constructor

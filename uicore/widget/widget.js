@@ -56,6 +56,31 @@ provide(BEMDOM.decl(this.name, {
             .findBlockInside(this._baseWidget.findElem('set-save'), 'button')
             .on('click', this._onShowContent.bind(this));
 
+        this.bindToWin('mousemove', this._winMove);
+
+        this._baseWidget
+            .findElem('adds-controls')
+            .one('click', this._winClick.bind(this));
+    },
+
+    _winMove: function(e) {
+        if(this._baseWidget.getMod('attached') === 'no') {
+            var dom = this._baseWidget.domElem;
+
+            dom.css({
+                left: e.pageX - (dom.width() / 2),
+                top: e.pageY - (dom.height() / 2)
+            });
+        }
+    },
+
+    _winClick: function() {
+        this._baseWidget.domElem.css({
+            'z-index': 98,
+            cursor: 'default'
+        });
+        this._baseWidget.delMod('attached');
+        this.unbindFromWin('mousemove', this._winMove);
     },
 
     _resizeSettingsWindow: function() {

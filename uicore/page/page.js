@@ -2,12 +2,24 @@ modules.define('page', ['i-bem__dom', 'jquery'], function(provide, BEMDOM, $) {
 
 provide(BEMDOM.decl(this.name, {
 
-    _step: 10,
+    _step: 5,
 
     onSetMod: {
         js: {
             inited: function() {
                 this.bindToWin('mousemove', function(e) {
+                    // if(e.target.className === 'widget__adds-controls') {
+                    //     var domElem = $(e.target).closest('.widget'),
+                    //         widget = this.findBlockOn(domElem, 'widget');
+
+                    //     if(widget.params.notAttached) {
+                    //         domElem.css({
+                    //             left: e.pageX - (domElem.width() / 2),
+                    //             top: e.pageY - (domElem.height() / 2)
+                    //         });
+                    //     }
+                    // }
+
                     if(this._target) {
                         var x = e.pageX - this._offsetX,
                             y = e.pageY - this._offsetY;
@@ -20,7 +32,7 @@ provide(BEMDOM.decl(this.name, {
                         var w = e.pageX - this._offsetX,
                             h = e.pageY - this._offsetY;
 
-                        if(w < 70 || h < 50) return;
+                        if(w < 69 || h < 50) return;
 
                         this._resizer
                             .find('.widget__container')
@@ -29,6 +41,7 @@ provide(BEMDOM.decl(this.name, {
                 });
 
                 this.bindToWin('mousedown', function(e) {
+
                     if(e.target.className === 'widget__adds-pane') {
                         this._target = $(e.target).closest('.widget');
 

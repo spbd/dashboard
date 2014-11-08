@@ -53,6 +53,7 @@ module.exports = function(bh) {
                 }
             }
         ])
+        .mods({attached: 'no'})
         .js(true);
 
     });

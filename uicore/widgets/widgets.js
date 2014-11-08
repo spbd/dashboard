@@ -8,6 +8,8 @@ provide(BEMDOM.decl(this.name, {
     onSetMod: {
         js: {
             inited: function() {
+                this._board = this.findBlockInside(BEMDOM.scope, 'board');
+
                 widgetsList.forEach(function(widget) {
                     this._addWidget(widget);
                 }, this);
@@ -26,9 +28,31 @@ provide(BEMDOM.decl(this.name, {
 
     _createWidgetInstance: function(event) {
         var widgetName = this.elemParams(event.currentTarget).widget,
-            board = this.findBlockInside(BEMDOM.scope, 'board').domElem;
+            pos = this._getFreePos();
 
-        BEMDOM.append(board, bh.apply({block: 'widget', widget: widgetName}));
+        var instance = BEMDOM
+                .append(this._board.domElem, bh.apply({block: 'widget', widget: widgetName})),
+            width = instance.width(),
+            height = instance.height();
+
+        instance.css({
+            left: event.pageX - width / 2,
+            top: event.pageY - height / 2,
+            'z-index': 101,
+            cursor: 'move',
+            opacity: 0
+        });
+
+        instance.animate({opacity: 1});
+    },
+
+    _getFreePos: function() {
+        var widgets = this._board
+            .findBlocksInside('widget')
+            .forEach(function(widget) {
+                console.log(widget.domElem.offset());
+            });
+
     }
 
 }, {
