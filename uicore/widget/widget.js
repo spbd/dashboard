@@ -79,6 +79,7 @@ provide(BEMDOM.decl(this.name, {
     _onShowContent: function(widget) {
 
         // shown front controls
+
         this._baseWidget.findElem('front').fadeIn(600);
 
         this._baseWidget.toggleMod(this._baseWidget.findElem('faces'), 'side', 'back');

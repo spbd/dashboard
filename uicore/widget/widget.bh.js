@@ -24,10 +24,7 @@ module.exports = function(bh) {
                                             elem: 'adds-settings',
                                             content: 'SET'
                                         },
-                                        {
-                                            elem: 'adds-resize',
-                                            content: '<->'
-                                        }
+                                        {elem: 'adds-resize'}
                                     ]
                                 },
                                 {

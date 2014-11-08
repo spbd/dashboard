@@ -25,15 +25,17 @@ provide(BEMDOM.decl(this.name, {
     },
 
     _createWidgetInstance: function(event) {
-        var widgetName = this.elemParams(event.currentTarget).widget;
+        var widgetName = this.elemParams(event.currentTarget).widget,
+            board = this.findBlockInside(BEMDOM.scope, 'board').domElem;
 
-        BEMDOM.append(BEMDOM.scope, bh.apply({block: 'widget', widget: widgetName}));
+        BEMDOM.append(board, bh.apply({block: 'widget', widget: widgetName}));
     }
 
 }, {
 
     live: function() {
         this.liveBindTo('item', 'click', this.prototype._createWidgetInstance);
+
         return false;
     }
 
