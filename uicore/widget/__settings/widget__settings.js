@@ -132,6 +132,27 @@ provide(BEMDOM.decl({
         });
     },
 
+    setStates: function(settings) {
+        this._controls.forEach(function(control) {
+            switch(control.type) {
+                case TYPE.INPUT: return control.instance.setVal(settings.shift().value);
+                case TYPE.CHECKBOX: return control.instance.setMod('checked', settings.shift().value);
+                case TYPE.SELECT: return control.instance.setVal(settings.shift().value);
+            }
+        });
+    },
+
+    getControls: function() {
+        var states = this.getStates();
+
+        return this._controls.map(function(control) {
+            return {
+                type: control.type,
+                value: states.shift()
+            };
+        });
+    },
+
     _getControlData: function(control) {
         switch(control.type) {
             case TYPE.INPUT: return {

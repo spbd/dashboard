@@ -1,7 +1,7 @@
 modules.define(
     'widget',
-    ['i-bem__dom', 'jquery', 'widget__config', 'bh'],
-    function(provide, BEMDOM, $, Config, bh) {
+    ['i-bem__dom', 'jquery', 'widget__config', 'bh', 'cookie'],
+    function(provide, BEMDOM, $, Config, bh, cookie) {
 
 provide(BEMDOM.decl(this.name, {
 
@@ -17,8 +17,6 @@ provide(BEMDOM.decl(this.name, {
                 settings: function(cb) {
                     _this._initBaseWidget();
                     _this._settings = _this._baseWidget.findElemInstance('settings');
-
-                    console.log(_this._settings);
 
                     cb.call(_this, _this._settings.API());
                     _this._settings.buildControls();
@@ -39,10 +37,11 @@ provide(BEMDOM.decl(this.name, {
     },
 
     _initBaseWidget: function() {
-
-        // move all event-handling to live section
+        // TODO: Move all events to live section
 
         this._baseWidget = this.findBlockOutside('widget');
+        this._id = this._baseWidget.params.id || (Math.random() * 0x10000000000).toString(36);
+        this._mooving = {};
 
         this._baseWidget
             .findElem('adds-settings')
@@ -56,14 +55,75 @@ provide(BEMDOM.decl(this.name, {
             .findBlockInside(this._baseWidget.findElem('set-save'), 'button')
             .on('click', this._onShowContent.bind(this));
 
-        this.bindToWin('mousemove', this._winMove);
+        this._baseWidget.findElem('adds-pane').on('mousedown', this._paneDown.bind(this));
+        this._baseWidget.findElem('adds-resize').on('mousedown', this._resizeDown.bind(this));
 
-        this._baseWidget
-            .findElem('adds-controls')
-            .one('click', this._winClick.bind(this));
+        this.bindToWin('mouseup', this._winUp.bind(this));
+
+        if(!this._baseWidget.params.id) {
+
+            this.bindToWin('mousemove', this._initWinMove);
+            this._baseWidget
+                .findElem('adds-controls')
+                .one('click', this._initWinClick.bind(this));
+        }
+
     },
 
-    _winMove: function(e) {
+    _resizeDown: function(e) {
+        var mv = this._mooving,
+            target = this._baseWidget.domElem,
+            x = (target.offset().left + target.width()) - e.pageX,
+            y = (target.offset().top + target.height()) - e.pageY;
+
+        mv.offsetX = target.offset().left - x;
+        mv.offsetY = target.offset().top - y;
+
+        target.css({'z-index': '99'});
+
+        this.bindToWin('mousemove', this._resizeWinMove);
+    },
+
+    _paneDown: function(e) {
+        var target = this._baseWidget.domElem,
+            mv = this._mooving;
+
+        mv.offsetX = e.pageX - target.offset().left;
+        mv.offsetY = e.pageY - target.offset().top;
+
+        target.css({'z-index': '99'});
+
+        this.bindToWin('mousemove', this._paneWinMove);
+    },
+
+    _winUp: function() {
+        this.unbindFromWin('mousemove', this._paneWinMove);
+        this.unbindFromWin('mousemove', this._resizeWinMove);
+
+        this._saveToStorage();
+    },
+
+    _resizeWinMove: function(e) {
+        var target = this._baseWidget,
+            mv = this._mooving,
+            w = e.pageX - mv.offsetX,
+            h = e.pageY - mv.offsetY;
+
+        if(w < 69 || h < 50) return;
+
+        target.elem('container').css({width: w, height: h});
+    },
+
+    _paneWinMove: function(e) {
+        var mv = this._mooving,
+            x = e.pageX - mv.offsetX,
+            y = e.pageY - mv.offsetY;
+
+        this._baseWidget.domElem.css({left: x});
+        this._baseWidget.domElem.css({top: y});
+    },
+
+    _initWinMove: function(e) {
         if(this._baseWidget.getMod('attached') === 'no') {
             var dom = this._baseWidget.domElem;
 
@@ -74,13 +134,15 @@ provide(BEMDOM.decl(this.name, {
         }
     },
 
-    _winClick: function() {
+    _initWinClick: function() {
         this._baseWidget.domElem.css({
             'z-index': 98,
             cursor: 'default'
         });
         this._baseWidget.delMod('attached');
-        this.unbindFromWin('mousemove', this._winMove);
+        this.unbindFromWin('mousemove', this._initWinMove);
+
+        this._saveToStorage();
     },
 
     _resizeSettingsWindow: function() {
@@ -95,32 +157,65 @@ provide(BEMDOM.decl(this.name, {
 
     _onShowSettings: function(widget) {
         this._resizeSettingsWindow();
-
-        // hide front controls
         this._baseWidget.findElem('front').fadeOut(600);
-
         this._baseWidget.toggleMod(this._baseWidget.findElem('faces'), 'side', 'back');
         this._onShowSettingsCb && this._onShowSettingsCb();
     },
 
     _onShowContent: function(widget) {
-
-        // shown front controls
-
         this._baseWidget.findElem('front').fadeIn(600);
-
         this._baseWidget.toggleMod(this._baseWidget.findElem('faces'), 'side', 'back');
         this._onSaveSettingsCb && this._onSaveSettingsCb(this._settings.getStates());
+        this._saveToStorage();
     },
 
     _onRemove: function() {
         this._baseWidget
             .domElem
             .animate({opacity: 0}, 500, function() {
-                console.log(this._settings._controls);
                 this._settings.destruct();
                 BEMDOM.destruct(this._baseWidget.domElem);
             }.bind(this));
+
+        this._removeFromStorage();
+    },
+
+    _saveToStorage: function() {
+        var baseDom = this._baseWidget.elem('container'),
+            settings = this._settings.getControls(),
+            position = baseDom.offset(),
+            size = {width: baseDom.width(), height: baseDom.height()},
+            object = {
+                id: this._id,
+                name: this.__self._blockName,
+                settings: settings,
+                position: position,
+                size: size
+            };
+
+        var data = localStorage.getItem('widgets'),
+            widgets = data ? JSON.parse(data) : [],
+            widget = widgets.some(function(w) {
+                    if(w.id === this._id) {
+                        w.settings = object.settings,
+                        w.position = object.position,
+                        w.size = object.size;
+                        return true;
+                    }
+                }, this);
+
+        !widget && widgets.push(object);
+        localStorage.setItem('widgets', JSON.stringify(widgets));
+    },
+
+    _removeFromStorage: function() {
+        var widgets = JSON
+            .parse(localStorage.getItem('widgets'))
+            .filter(function(widget) {
+                return widget.id !== this._id;
+            }, this);
+
+        localStorage.setItem('widgets', JSON.stringify(widgets) || '');
     }
 
 }));

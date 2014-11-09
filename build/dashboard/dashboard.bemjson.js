@@ -11,6 +11,7 @@
     ],
     content: {
         block: 'board',
+        js: true,
         content: {block: 'navigator'}
     }
 });
