@@ -68,6 +68,11 @@ provide(BEMDOM.decl(this.name, {
                 .one('click', this._initWinClick.bind(this));
         }
 
+        // for resizing
+        // $('.simple').parent().find('*').each(function() {
+        //   if(this.textContent) {console.log(this.className)}
+        // })
+
     },
 
     _resizeDown: function(e) {
@@ -109,7 +114,7 @@ provide(BEMDOM.decl(this.name, {
             w = e.pageX - mv.offsetX,
             h = e.pageY - mv.offsetY;
 
-        if(w < 69 || h < 50) return;
+        if(w < 70 || h < 50) return;
 
         target.elem('container').css({width: w, height: h});
     },
@@ -149,10 +154,15 @@ provide(BEMDOM.decl(this.name, {
         var sets = this._settings,
             props = sets.getProps(),
             front = this._baseWidget.findElem('front'),
-            offset = (props.width - front.width()) / 2;
+            offsetX = (props.width - front.width()) / 2,
+            offsetY = (props.height - front.height()) / 2;
 
         this._settings.setSize(props.width, props.height);
-        this._settings.setLeft(offset * -1);
+
+        this._settings.setPos({
+            left: offsetX * -1,
+            top: offsetY * -1
+        });
     },
 
     _onShowSettings: function(widget) {

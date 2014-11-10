@@ -73,8 +73,11 @@ provide(BEMDOM.decl({
         return this._config.props;
     },
 
-    setLeft: function(left) {
-        this.domElem.css({left: left});
+    setPos: function(pos) {
+        this.domElem.css({
+            left: pos.left,
+            top: pos.top
+        });
     },
 
     setSize: function(width, height) {
