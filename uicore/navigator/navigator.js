@@ -1,26 +1,63 @@
 modules.define(
     'navigator',
     ['i-bem__dom','jquery', 'bh'],
-    function(provide, BEMDOM, $, bh) {
+    function(provide, BEMDOM, $, bh, debounce) {
 
 BEMDOM.decl(this.name, {
 
     onSetMod: {
         'js': {
             'inited': function() {
+                this.bindToWin('mousemove', this._winMove);
+                this._timer = null;
+                this._isSwitcherShow = false;
+                this._popupOpened = false;
+                this.setMod(this.elem('switcher'), 'hidden', 'yes');
 
+                this.elem('switcher').on('mouseenter', function() {
+                    this._popupOpened = true;
+                    clearTimeout(this._timer);
+                }.bind(this));
+
+                this.elem('switcher').on('mouseout', function() {
+                    this._popupOpened = false;
+                }.bind(this));
             }
         }
+    },
+
+    _winMove: function() {
+        if(this._popupOpened) return;
+
+        if(!this._isSwitcherShow) {
+            this._showSwitcher();
+            this._isSwitcherShow = true;
+        }
+
+        this._timer && clearTimeout(this._timer);
+        this._timer = setTimeout(function() {
+            this._hideSwitcher();
+            this._isSwitcherShow = false;
+        }.bind(this), 3000);
+    },
+
+    _hideSwitcher: function() {
+        this.toggleMod(this.elem('switcher'), 'hidden', 'yes', 'no');
+    },
+
+    _showSwitcher: function() {
+        this.toggleMod(this.elem('switcher'), 'hidden', 'yes', 'no');
     },
 
     onElemSetMod: {
         'popup': {
             'opened': {
-                'true': function() {
-                    // this.open();
+                'yes': function() {
+                    clearTimeout(this._timer);
+                    this._popupOpened = true;
                 },
-                '': function() {
-                    // this.close();
+                'no': function() {
+                    this._popupOpened = false;
                 }
             }
         }
@@ -51,6 +88,7 @@ BEMDOM.decl(this.name, {
 }, {
     live: function() {
         this.liveBindTo('switcher', 'click', this.prototype._toggle);
+        return false;
     }
 });
 

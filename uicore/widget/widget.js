@@ -39,7 +39,7 @@ provide(BEMDOM.decl(this.name, {
         // TODO: Move all events to live section
 
         this._id = this._baseWidget.params.id || (Math.random() * 0x10000000000).toString(36);
-        this._mooving = {};
+        this._moving = {};
 
         this._baseWidget
             .findElem('adds-settings')
@@ -79,7 +79,7 @@ provide(BEMDOM.decl(this.name, {
     },
 
     _resizeDown: function(e) {
-        var mv = this._mooving,
+        var mv = this._moving,
             target = this._baseWidget.domElem,
             x = (target.offset().left + target.width()) - e.pageX,
             y = (target.offset().top + target.height()) - e.pageY;
@@ -113,7 +113,7 @@ provide(BEMDOM.decl(this.name, {
 
     _paneDown: function(e) {
         var target = this._baseWidget.domElem,
-            mv = this._mooving;
+            mv = this._moving;
 
         mv.offsetX = e.pageX - target.offset().left;
         mv.offsetY = e.pageY - target.offset().top;
@@ -132,7 +132,7 @@ provide(BEMDOM.decl(this.name, {
 
     _resizeWinMove: function(e) {
         var target = this._baseWidget,
-            mv = this._mooving,
+            mv = this._moving,
             w = e.pageX - mv.offsetX,
             h = e.pageY - mv.offsetY;
 
@@ -146,7 +146,7 @@ provide(BEMDOM.decl(this.name, {
     _resizeFonts: function() {
         var w = this._baseWidget.elem('container').width(),
             h = this._baseWidget.elem('container').height(),
-            mv = this._mooving,
+            mv = this._moving,
             min = Math.min(mv.right, mv.bottom),
             size;
 
@@ -177,7 +177,7 @@ provide(BEMDOM.decl(this.name, {
     },
 
     _paneWinMove: function(e) {
-        var mv = this._mooving,
+        var mv = this._moving,
             x = e.pageX - mv.offsetX,
             y = e.pageY - mv.offsetY;
 

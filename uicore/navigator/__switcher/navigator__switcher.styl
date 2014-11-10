@@ -10,7 +10,7 @@
     line-height: 45px;
     font-size: 40px;
     font-family: Tahoma;
-    transition: all 0.1s;
+    transition: all 0.3s;
     border: 1px solid #000000;
     position: absolute;
     left: 50%;
@@ -18,6 +18,7 @@
     top: 10px;
     box-shadow: 0 0 10px -1px #000;
     cursor: pointer;
+
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
@@ -27,4 +28,14 @@
 {
     transform: scale(1.1);
     box-shadow: 0 0 20px 0px #000;
+}
+
+.navigator__switcher_hidden_yes
+{
+    top: -100px;
+}
+
+.navigator__switcher_hidden_no
+{
+    top: 10px;
 }
