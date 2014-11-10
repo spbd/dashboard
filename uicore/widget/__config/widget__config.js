@@ -11,15 +11,25 @@ provide(inherit({
             props: {
                 width: 200,
                 height: 200,
-                scalable: false,
-                glueToGrid: true,
-                multiple: true
+                scalable: false
             }
         };
     },
 
-    setProps: function(props) {
-        objects.extend(this._config.props, props);
+    getProps: function() {
+        return this._config.props;
+    },
+
+    API: function() {
+        var _this = this,
+            API = {
+                setProps: function(props) {
+                    objects.extend(_this._config.props, props);
+                    return API;
+                }
+            };
+
+        return API;
     }
 
 }));

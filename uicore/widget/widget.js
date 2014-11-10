@@ -1,7 +1,7 @@
 modules.define(
     'widget',
-    ['i-bem__dom', 'jquery', 'widget__config', 'bh', 'cookie'],
-    function(provide, BEMDOM, $, Config, bh, cookie) {
+    ['i-bem__dom', 'jquery', 'widget__config', 'bh', 'next-tick', 'functions__throttle'],
+    function(provide, BEMDOM, $, Config, bh, nextTick, throttle) {
 
 provide(BEMDOM.decl(this.name, {
 
@@ -10,17 +10,14 @@ provide(BEMDOM.decl(this.name, {
             _cfg,
             API = {
                 configure: function(cb) {
-                    _cfg = new Config();
-                    cb.call(_this, _cfg);
-                    return API;
-                },
-                settings: function(cb) {
+                    _this._cfg = new Config();
                     _this._baseWidget = _this.findBlockOutside('widget');
                     _this._settings = _this._baseWidget.findElemInstance('settings');
 
+                    cb.call(_this, _this._cfg.API(), _this._settings.API());
+
                     _this._initBaseWidget();
 
-                    cb.call(_this, _this._settings.API());
                     _this._settings.buildControls();
 
                     return API;
@@ -67,11 +64,18 @@ provide(BEMDOM.decl(this.name, {
             this._baseWidget
                 .findElem('adds-controls')
                 .one('click', this._initWinClick.bind(this));
+
+            console.log(this._cfg.getProps());
+
+            this._baseWidget.elem('container').css({
+                width: this._cfg.getProps().width,
+                height: this._cfg.getProps().height
+            });
         }
 
-        setTimeout(function() {
-            this._recalculateFontsSize();
-        }.bind(this), 25);
+        nextTick(this._recalculateFontsSize.bind(this));
+
+        this._fontResizer = throttle(this._resizeFonts.bind(this), 100);
     },
 
     _resizeDown: function(e) {
@@ -136,11 +140,10 @@ provide(BEMDOM.decl(this.name, {
 
         target.elem('container').css({width: w, height: h});
 
-        this._resizeFonts();
+        this._fontResizer();
     },
 
     _resizeFonts: function() {
-        // Use throttling
         var w = this._baseWidget.elem('container').width(),
             h = this._baseWidget.elem('container').height(),
             mv = this._mooving,
@@ -152,8 +155,6 @@ provide(BEMDOM.decl(this.name, {
 
         this._textNodes.forEach(function(obj) {
             var newSize = obj.fontSize + size;
-            // if(newSize < 10) return;
-
             obj.node.style.fontSize = newSize + 'px';
         });
     },
@@ -163,7 +164,7 @@ provide(BEMDOM.decl(this.name, {
 
         var w = this._baseWidget.elem('container').width(),
             h = this._baseWidget.elem('container').height(),
-            sizes = this._settings.getProps(),
+            sizes = this._cfg.getProps(),
             min = Math.min(sizes.width, sizes.height),
             size;
 

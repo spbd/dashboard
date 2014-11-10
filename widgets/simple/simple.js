@@ -10,13 +10,11 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
             inited: function() {
                 this
                     .widgetAPI()
-                    .configure(function(config) {
-                        // width, height
-                        // config.setProps({});
-                    })
-                    .settings(function(constructor) {
-                        constructor
-                            .setProps({width: 200, height: 270})
+                    .configure(function(widget, settings) {
+                        widget.setProps({width: 400, height: 160});
+
+                        settings
+                            .setProps({width: 200, height: 260})
                             .input({placeholder: 'hint', label: 'Text area', handler: this._onInputChange})
                             .checkbox({text: 'Use normal', handler: this._onInputChange})
                             .checkbox({text: 'normal', handler: this._onInputChange})

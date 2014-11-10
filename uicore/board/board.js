@@ -1,7 +1,7 @@
 modules.define(
     'board',
-    ['i-bem__dom', 'widgets-list', 'bh', 'cookie'],
-    function(provide, BEMDOM, widgetsList, bh, cookie) {
+    ['i-bem__dom', 'widgets-list', 'bh'],
+    function(provide, BEMDOM, widgetsList, bh) {
 
 provide(BEMDOM.decl(this.name, {
 

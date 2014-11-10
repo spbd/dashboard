@@ -27,8 +27,7 @@ provide(BEMDOM.decl(this.name, {
     },
 
     _createWidgetInstance: function(event) {
-        var widgetName = this.elemParams(event.currentTarget).widget,
-            pos = this._getFreePos();
+        var widgetName = this.elemParams(event.currentTarget).widget;
 
         var instance = BEMDOM
                 .append(this._board.domElem, bh.apply({block: 'widget', widget: widgetName})),
@@ -44,15 +43,6 @@ provide(BEMDOM.decl(this.name, {
         });
 
         instance.animate({opacity: 1});
-    },
-
-    _getFreePos: function() {
-        var widgets = this._board
-            .findBlocksInside('widget')
-            .forEach(function(widget) {
-                console.log(widget.domElem.offset());
-            });
-
     }
 
 }, {
