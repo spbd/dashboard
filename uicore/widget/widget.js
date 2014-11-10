@@ -15,8 +15,10 @@ provide(BEMDOM.decl(this.name, {
                     return API;
                 },
                 settings: function(cb) {
-                    _this._initBaseWidget();
+                    _this._baseWidget = _this.findBlockOutside('widget');
                     _this._settings = _this._baseWidget.findElemInstance('settings');
+
+                    _this._initBaseWidget();
 
                     cb.call(_this, _this._settings.API());
                     _this._settings.buildControls();
@@ -39,7 +41,6 @@ provide(BEMDOM.decl(this.name, {
     _initBaseWidget: function() {
         // TODO: Move all events to live section
 
-        this._baseWidget = this.findBlockOutside('widget');
         this._id = this._baseWidget.params.id || (Math.random() * 0x10000000000).toString(36);
         this._mooving = {};
 
@@ -68,11 +69,9 @@ provide(BEMDOM.decl(this.name, {
                 .one('click', this._initWinClick.bind(this));
         }
 
-        // for resizing
-        // $('.simple').parent().find('*').each(function() {
-        //   if(this.textContent) {console.log(this.className)}
-        // })
-
+        setTimeout(function() {
+            this._recalculateFontsSize();
+        }.bind(this), 25);
     },
 
     _resizeDown: function(e) {
@@ -84,9 +83,28 @@ provide(BEMDOM.decl(this.name, {
         mv.offsetX = target.offset().left - x;
         mv.offsetY = target.offset().top - y;
 
+        mv.right = this._baseWidget.elem('container').width();
+        mv.bottom = this._baseWidget.elem('container').height();
+
         target.css({'z-index': '99'});
 
         this.bindToWin('mousemove', this._resizeWinMove);
+        this._scanTextNodes();
+    },
+
+    _scanTextNodes: function() {
+        this._textNodes = this.domElem
+            .find('*')
+            .toArray()
+            .reduce(function(nodes, curr) {
+                if(curr.textContent) {
+                    nodes.push({
+                        node: curr,
+                        fontSize: parseInt($(curr).css('font-size'), 10)
+                    });
+                }
+                return nodes;
+            }, []);
     },
 
     _paneDown: function(e) {
@@ -117,6 +135,44 @@ provide(BEMDOM.decl(this.name, {
         if(w < 70 || h < 50) return;
 
         target.elem('container').css({width: w, height: h});
+
+        this._resizeFonts();
+    },
+
+    _resizeFonts: function() {
+        // Use throttling
+        var w = this._baseWidget.elem('container').width(),
+            h = this._baseWidget.elem('container').height(),
+            mv = this._mooving,
+            min = Math.min(mv.right, mv.bottom),
+            size;
+
+        w < h &&  (size = (w - min) / 5);
+        h < w && (size = (h - min) / 5);
+
+        this._textNodes.forEach(function(obj) {
+            var newSize = obj.fontSize + size;
+            // if(newSize < 10) return;
+
+            obj.node.style.fontSize = newSize + 'px';
+        });
+    },
+
+    _recalculateFontsSize: function() {
+        this._scanTextNodes();
+
+        var w = this._baseWidget.elem('container').width(),
+            h = this._baseWidget.elem('container').height(),
+            sizes = this._settings.getProps(),
+            min = Math.min(sizes.width, sizes.height),
+            size;
+
+        w < h &&  (size = (w - min) / 5);
+        h < w && (size = (h - min) / 5);
+
+        this._textNodes.forEach(function(obj) {
+            obj.node.style.fontSize = (obj.fontSize + size) + 'px';
+        });
     },
 
     _paneWinMove: function(e) {

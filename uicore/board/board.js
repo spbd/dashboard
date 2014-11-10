@@ -28,7 +28,7 @@ provide(BEMDOM.decl(this.name, {
             var instance = BEMDOM.append(this.domElem, bh.apply({
                     block: 'widget',
                     widget: widget.name,
-                    js: {id: widget.id, settings: widget.settings}
+                    js: {id: widget.id}
                 })).bem('widget');
 
             instance
@@ -44,6 +44,7 @@ provide(BEMDOM.decl(this.name, {
                 left: widget.position.left,
                 top: widget.position.top
             });
+
         }, this);
     }
 
