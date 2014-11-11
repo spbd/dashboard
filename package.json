@@ -24,6 +24,7 @@
     "jshint": "~2.5.10"
   },
   "scripts": {
-    "lint": "jshint . && jscs ."
+    "lint": "jshint . && jscs .",
+    "deploy": "sh deploy.sh"
   }
 }
