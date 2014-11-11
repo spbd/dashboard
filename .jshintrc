@@ -5,7 +5,6 @@
 
     "bitwise": true,
     "freeze": true,
-    "curly": true,
     "camelcase": true,
     "eqeqeq": true,
     "es3": true,
@@ -18,10 +17,9 @@
     "quotmark": "single",
     "undef": true,
     "unused": "vars",
-    "strict": true,
+    "strict": false,
     "trailing": true,
     "indent": 4,
-    "maxparams": 4,
     "maxdepth": 4,
     "maxlen": 120,
 
@@ -31,5 +29,7 @@
     "sub": true,
 
     "nomen": false,
-    "onevar": false
+    "onevar": false,
+
+    "predef" : ["modules"]
 }

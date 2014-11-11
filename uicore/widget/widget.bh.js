@@ -42,11 +42,11 @@ module.exports = function(bh) {
                                 {
                                     elem: 'set-save',
                                     content: {
-                                        block : 'button',
-                                        text : 'save',
-                                        mods : { theme : 'islands', size : 's' }
+                                        block: 'button',
+                                        text: 'save',
+                                        mods: {theme: 'islands', size: 's'}
                                     }
-                                },
+                                }
                             ]
                         }
                     ]

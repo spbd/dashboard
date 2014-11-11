@@ -48,14 +48,6 @@ provide(BEMDOM.decl(this.name, {
         }, this);
     }
 
-}, {
-
-    live: function() {
-
-
-        return false;
-    }
-
 }));
 
 });

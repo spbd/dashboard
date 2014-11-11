@@ -7,7 +7,6 @@ provide(BEMDOM.decl(this.name, {
 
     widgetAPI: function widgetAPI() {
         var _this = this,
-            _cfg,
             API = {
                 configure: function(cb) {
                     _this._cfg = new Config();
@@ -136,7 +135,9 @@ provide(BEMDOM.decl(this.name, {
             w = e.pageX - mv.offsetX,
             h = e.pageY - mv.offsetY;
 
-        if(w < 70 || h < 50) return;
+        if(w < 70 || h < 50) {
+            return;
+        }
 
         target.elem('container').css({width: w, height: h});
 
@@ -161,8 +162,6 @@ provide(BEMDOM.decl(this.name, {
 
     _recalculateFontsSize: function() {
         this._scanTextNodes();
-
-        if(a) a++;
 
         var w = this._baseWidget.elem('container').width(),
             h = this._baseWidget.elem('container').height(),

@@ -45,7 +45,7 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
 
     _onInputChange: function(text, elem) {
         console.log(arguments);
-    },
+    }
 
     // this.container.add(/* elem */)
     // this.container.remove(/* elem */)

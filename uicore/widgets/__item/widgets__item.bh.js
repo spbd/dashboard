@@ -3,7 +3,7 @@ module.exports = function(bh) {
         ctx
             .mix({
                 block: json.name,
-                elem: 'manifest_preview',
+                elem: 'manifest_preview'
             })
             .js({widget: json.name});
     });

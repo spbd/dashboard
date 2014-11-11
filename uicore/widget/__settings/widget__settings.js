@@ -18,7 +18,7 @@ OPTIONS[TYPE.INPUT] = {
 
 OPTIONS[TYPE.CHECKBOX] = {
     text: 'button',
-    checked : false,
+    checked: false,
     handler: null
 };
 
@@ -26,7 +26,6 @@ OPTIONS[TYPE.SELECT] = {
     options: null,
     handler: null
 };
-
 
 provide(BEMDOM.decl({
 
@@ -163,18 +162,18 @@ provide(BEMDOM.decl({
                 elem: 'w-input',
                 label: control.props.label,
                 content: {
-                    block : 'input',
-                    mods : { theme : 'islands', size: 's'},
-                    placeholder : control.props.placeholder
+                    block: 'input',
+                    mods: {theme: 'islands', size: 's'},
+                    placeholder: control.props.placeholder
                 }
             };
             case TYPE.CHECKBOX: return {
                     block: 'widget',
                     elem: 'w-checkbox',
                     content: {
-                        block : 'checkbox',
-                        text : control.props.text,
-                        mods : { theme : 'islands', size : 'm', checked : control.props.checked}
+                        block: 'checkbox',
+                        text: control.props.text,
+                        mods: {theme: 'islands', size: 'm', checked: control.props.checked}
                     }
             };
             case TYPE.SELECT: return {
@@ -182,9 +181,9 @@ provide(BEMDOM.decl({
                     elem: 'w-select',
                     label: control.props.label,
                     content: {
-                        block : 'select',
-                        mods : { mode : 'radio', theme : 'islands', size : 's', width : 'available'},
-                        options : control.props.options
+                        block: 'select',
+                        mods: {mode: 'radio', theme: 'islands', size: 's', width: 'available'},
+                        options: control.props.options
                     }
             };
         }

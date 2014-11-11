@@ -4,7 +4,7 @@ module.exports = function(bh) {
         if(json.label) {
             ctx.content([
                 {elem: 'w-select', mods: {label: true}, content: json.label},
-                ctx.content(),
+                ctx.content()
             ], true);
         }
     });

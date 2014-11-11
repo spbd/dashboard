@@ -1,6 +1,6 @@
 modules.define(
     'navigator',
-    ['i-bem__dom','jquery', 'bh'],
+    ['i-bem__dom', 'jquery', 'bh'],
     function(provide, BEMDOM, $, bh, debounce) {
 
 BEMDOM.decl(this.name, {
@@ -27,7 +27,9 @@ BEMDOM.decl(this.name, {
     },
 
     _winMove: function() {
-        if(this._popupOpened || this._mouseMove) return;
+        if(this._popupOpened || this._mouseMove) {
+            return;
+        }
 
         if(!this._isSwitcherShow) {
             this._showSwitcher();
@@ -73,10 +75,7 @@ BEMDOM.decl(this.name, {
                     elem: 'popup'
                 })
             );
-            this._popup.css({
-                left: left - (this._popup.width() / 2),
-                // top: this.elem('switcher').offset().top + (this.elem('switcher').height() / 2) + 30
-            });
+            this._popup.css({left: left - (this._popup.width() / 2)});
         }
         return this._popup;
     },
