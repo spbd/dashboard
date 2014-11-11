@@ -1,0 +1,24 @@
+{
+    "excludeFiles": ["libs", "node_modules", "build", ".enb"],
+    "requireCurlyBraces": ["if","for", "while", "do", "try", "catch"],
+    "disallowSpaceAfterKeywords": ["if", "for", "while", "switch"],
+    "requireSpaceAfterKeywords": ["else", "while", "catch"],
+    "disallowSpacesInFunctionExpression": {"beforeOpeningRoundBrace": true},
+    "disallowSpacesInsideArrayBrackets": true,
+    "disallowSpacesInsideObjectBrackets": true,
+    "disallowSpaceAfterObjectKeys": true,
+    "disallowSpaceAfterPrefixUnaryOperators": ["++", "--", "+", "-", "~", "!"],
+    "disallowSpaceBeforePostfixUnaryOperators": ["++", "--"],
+    "disallowSpaceBeforeBinaryOperators": [","],
+    "requireSpaceBeforeBinaryOperators": [
+        "+", "-", "/", "*", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<=", "&&", "||"
+    ],
+    "requireSpaceAfterBinaryOperators": [
+        ",", "+", "-", "/", "*", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<=", "&&", "||"
+    ],
+    "disallowKeywords": ["with"],
+    "disallowMultipleLineBreaks": true,
+    "disallowKeywordsOnNewLine": ["else"],
+    "requireLineFeedAtFileEnd": true,
+    "safeContextKeyword": ["_this"]
+}

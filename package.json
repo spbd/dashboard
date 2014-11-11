@@ -1,13 +1,10 @@
 {
-  "author": "",
-  "name": "enb-stub",
+  "author": "Tikvach Alexander <unlok@yandex-yeam.ru>",
+  "name": "dashboard",
   "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "git://github.com/unlok/enb-stub.git"
-  },
-  "engines": {
-    "node": "0.6 | 0.7 | 0.8 | 0.9"
+    "url": "git://github.com/spbd/dashboard.git"
   },
   "dependencies": {
     "enb": "0.13.8",
@@ -22,5 +19,11 @@
     "enb-stylus": "~1.1.5",
     "vow": "~0.4.6"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "jscs": "~1.7.3",
+    "jshint": "~2.5.10"
+  },
+  "scripts": {
+    "lint": "jshint . && jscs ."
+  }
 }

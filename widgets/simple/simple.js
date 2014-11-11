@@ -1,7 +1,7 @@
 modules.define(
     'simple',
-    ['i-bem__dom', 'jquery', 'widget'],
-    function(provide, BEMDOM, $, Widget) {
+    ['i-bem__dom', 'jquery', 'widget', 'server'],
+    function(provide, BEMDOM, $, Widget, server) {
 
 provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
 
@@ -24,7 +24,7 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                             .select({options: [
                                 {val: '1', text: 't1'},
                                 {val: '2', text: 't2', checked: true},
-                                {val: '3', text: 't3'},
+                                {val: '3', text: 't3'}
                             ], handler: this._onInputChange, label: 'Trolololo'});
                     })
                     .onSaveSettings(function(controls) {
@@ -35,6 +35,10 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                     });
 
                     // board.notify('Simple: bad connection');
+                    //
+                    server.on('widgets/free-space', function(e, data) {
+                        console.log(data);
+                    });
             }
         }
     },

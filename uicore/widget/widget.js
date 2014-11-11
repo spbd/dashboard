@@ -162,6 +162,8 @@ provide(BEMDOM.decl(this.name, {
     _recalculateFontsSize: function() {
         this._scanTextNodes();
 
+        if(a) a++;
+
         var w = this._baseWidget.elem('container').width(),
             h = this._baseWidget.elem('container').height(),
             sizes = this._cfg.getProps(),

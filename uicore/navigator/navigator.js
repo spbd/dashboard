@@ -15,19 +15,19 @@ BEMDOM.decl(this.name, {
                 this.setMod(this.elem('switcher'), 'hidden', 'yes');
 
                 this.elem('switcher').on('mouseenter', function() {
-                    this._popupOpened = true;
+                    this._mouseMove = true;
                     clearTimeout(this._timer);
                 }.bind(this));
 
                 this.elem('switcher').on('mouseout', function() {
-                    this._popupOpened = false;
+                    this._mouseMove = false;
                 }.bind(this));
             }
         }
     },
 
     _winMove: function() {
-        if(this._popupOpened) return;
+        if(this._popupOpened || this._mouseMove) return;
 
         if(!this._isSwitcherShow) {
             this._showSwitcher();
