@@ -1,10 +1,10 @@
 {
-  "name": "enb-stub",
+  "name": "dashboard",
   "version": "0.0.1",
   "homepage": "https://github.com/unlok/enb-stub",
   "license": "MIT",
   "dependencies": {
-    "bem-core": "git@github.com:bem/bem-core.git",
-    "bem-components": "git://github.com/bem/bem-components.git#v2"
+    "bem-core": "2.5.0",
+    "bem-components": "https://github.com/bem/bem-components.git#v2"
   }
 }

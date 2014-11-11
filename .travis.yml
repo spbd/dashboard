@@ -1,8 +1,12 @@
 language: node_js
 node_js:
   - '0.10'
+before_script:
+  - npm install -g bower
+  - bower install
 script: npm run lint
-after_success: npm run deploy
+after_success:
+  - '[ "${TRAVIS_PULL_REQUEST}" != "false" ] || [ "${TRAVIS_BRANCH}" = "master" ] && npm run deploy'
 env:
   global:
     - GH_REF: github.com/spbd/dashboard.git

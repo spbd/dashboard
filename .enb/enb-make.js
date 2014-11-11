@@ -1,5 +1,4 @@
 var levels = require('enb-bem-techs/techs/levels'),
-    levelsToBemdecl = require('enb-bem-techs/techs/levels-to-bemdecl'),
     files = require('enb-bem-techs/techs/files'),
     provide = require('enb/techs/file-provider'),
     bemdecl = require('enb-bem-techs/techs/bemjson-to-bemdecl'),
@@ -12,10 +11,9 @@ var levels = require('enb-bem-techs/techs/levels'),
     bhYm = require('enb-bh/techs/bh-client-module'),
     html = require('enb-bh/techs/html-from-bemjson'),
     mergeFiles = require('enb/techs/file-merge'),
-    depsMerge = require('enb/techs/deps-merge'),
     widgetsList = require('./techs/widgets-list'),
     widgetsDecl = require('./techs/widgets-decl'),
-    widgetsYm = require('./techs/widgets-ym');
+    widgetsYm = require('./techs/widgets-ym'),
     widgetsManifest = require('./techs/widgets-manifest');
 
 module.exports = function(config) {
@@ -61,6 +59,13 @@ module.exports = function(config) {
                     require('enb/techs/file-copy'),
                     {sourceTarget: '?.css', destTarget: '_?.css'}
                 ]
+            ]);
+        });
+
+        nodeConfig.mode('prod', function(nodeConfig) {
+            nodeConfig.addTechs([
+                [borschik, {source: '?.browser+bh+widgets.js', target: '_?.js'}],
+                [borschik, {source: '?.css', target: '_?.css', freeze: true, minimize: true}]
             ]);
         });
 

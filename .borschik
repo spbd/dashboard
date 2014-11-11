@@ -1,0 +1,10 @@
+{
+    "freeze_paths": {
+        "libs/**": "static",
+        "widgets/**": "static",
+        "uicore/**": "static"
+    },
+    "paths" : {
+        "./": "../"
+    }
+}

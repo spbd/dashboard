@@ -9,15 +9,11 @@ provide(BEMDOM.decl(this.name, {
         var _this = this,
             API = {
                 configure: function(cb) {
-                    _this._cfg = new Config();
+                    _this._cfg = _this._cfg || new Config();
                     _this._baseWidget = _this.findBlockOutside('widget');
                     _this._settings = _this._baseWidget.findElemInstance('settings');
 
                     cb.call(_this, _this._cfg.API(), _this._settings.API());
-
-                    _this._initBaseWidget();
-
-                    _this._settings.buildControls();
 
                     return API;
                 },
@@ -28,6 +24,10 @@ provide(BEMDOM.decl(this.name, {
                 onShowSettings: function(cb) {
                     _this._onShowSettingsCb = cb;
                     return API;
+                },
+                init: function() {
+                    _this._initBaseWidget();
+                    return API;
                 }
             };
 
@@ -36,6 +36,8 @@ provide(BEMDOM.decl(this.name, {
 
     _initBaseWidget: function() {
         // TODO: Move all events to live section
+
+        this._settings.buildControls();
 
         this._id = this._baseWidget.params.id || (Math.random() * 0x10000000000).toString(36);
         this._moving = {};
@@ -63,8 +65,6 @@ provide(BEMDOM.decl(this.name, {
             this._baseWidget
                 .findElem('adds-controls')
                 .one('click', this._initWinClick.bind(this));
-
-            console.log(this._cfg.getProps());
 
             this._baseWidget.elem('container').css({
                 width: this._cfg.getProps().width,

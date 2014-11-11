@@ -4,8 +4,8 @@
     favicon: '/favicon.ico',
     js: true,
     head: [
-        { elem: 'css', url: 'dashboard.css', ie: false },
-        { elem: 'js', url: 'dashboard.browser+bh+widgets.js' },
+        { elem: 'css', url: '_dashboard.css', ie: false },
+        { elem: 'js', url: '_dashboard.js' },
         { elem: 'meta', attrs: { name: 'description', content: '' }},
         { elem: 'meta', attrs: { name: 'keywords', content: '' }}
     ],
