@@ -17,7 +17,7 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                             .setProps({width: 200, height: 260})
                             .input({placeholder: 'hint', label: 'Text area', handler: this._onChange})
                             .checkbox({text: 'Example1', handler: this._onChange})
-                            .checkbox({text: 'Example2', handler: this._onChange})
+                            .checkbox({text: 'Example2', handler: this._onChange});
                     });
 
             }
