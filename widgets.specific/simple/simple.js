@@ -35,21 +35,6 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                     .onShowSettings(function() {
                         console.log('Settings show');
                     })
-                    .configure(function(widget, settings) {
-                        settings
-                            .setProps({width: 300, height: 260})
-                            .input({placeholder: 'hint', label: 'Text area', handler: this._onInputChange})
-                            .checkbox({text: 'Use normal', handler: this._onInputChange})
-                            .checkbox({text: 'normal', handler: this._onInputChange})
-                            .input({placeholder: 'hint', label: 'Text area', handler: this._onInputChange})
-                            .input({placeholder: 'hint', label: 'Text area', handler: this._onInputChange})
-                            .checkbox({text: 'Use normal load', checked: true, handler: this._onInputChange})
-                            .select({options: [
-                                {val: '1', text: 't1'},
-                                {val: '2', text: 't2', checked: true},
-                                {val: '3', text: 't3'}
-                            ], handler: this._onInputChange, label: 'Trolololo'});
-                    })
                     .init();
 
                     // board.notify('Simple: bad connection');

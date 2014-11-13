@@ -6,7 +6,7 @@ module.exports = require('enb/lib/build-flow').create()
     .name('widgets-list')
     .target('target', '?.widgets-list.js')
     .needRebuild(function(cache) {
-        this._widgetsDir = path.join(this.node.getRootDir(), 'widgets');
+        this._widgetsDir = path.join(this.node.getRootDir(), 'widgets.specific');
         return cache.needRebuildFile('widgets', this._widgetsDir);
     })
     .saveCache(function(cache) {
