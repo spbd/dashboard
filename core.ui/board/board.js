@@ -27,7 +27,7 @@ provide(BEMDOM.decl(this.name, {
         widgets.forEach(function(widget) {
             var instance = BEMDOM.append(this.domElem, bh.apply({
                     block: 'widget',
-                    widget: widget.name,
+                    widgetName: widget.name,
                     js: {id: widget.id}
                 })).bem('widget');
 

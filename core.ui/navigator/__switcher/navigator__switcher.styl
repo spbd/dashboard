@@ -1,42 +1,49 @@
-.navigator__switcher
+.navigator
 {
-    width: 50px;
-    height: 50px;
-    background: #141414;
-    opacity: 0.5;
-    border-radius: 10px;
-    color: #919191;
-    text-align: center;
-    line-height: 45px;
-    font-size: 40px;
-    font-family: Tahoma;
-    transition: all 0.3s;
-    border: 1px solid #000000;
-    position: absolute;
-    left: 50%;
-    margin-left: -25px;
-    top: 10px;
-    box-shadow: 0 0 10px -1px #000;
-    cursor: pointer;
-    z-index: 101;
+    &__switcher
+    {
+        width: 50px;
+        height: 50px;
+        background: #141414;
 
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
+        border: 1px solid #000000;
+        border-radius: 10px;
+
+        color: #919191;
+        text-align: center;
+        font: 40px/45px Tahoma;
+
+        transition: all 0.3s;
+
+        position: absolute;
+        left: 50%;
+        top: 10px;
+        margin-left: -25px;
+
+        box-shadow: 0 0 10px -1px #000;
+        cursor: pointer;
+        z-index: 101;
+        opacity: 0.5;
+
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+
+        &:hover
+        {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px 0px #000;
+        }
+
+        &_hidden_yes
+        {
+            top: -100px;
+        }
+
+        &_hidden_no
+        {
+            top: 10px;
+        }
+    }
 }
 
-.navigator__switcher:hover
-{
-    transform: scale(1.1);
-    box-shadow: 0 0 20px 0px #000;
-}
-
-.navigator__switcher_hidden_yes
-{
-    top: -100px;
-}
-
-.navigator__switcher_hidden_no
-{
-    top: 10px;
-}

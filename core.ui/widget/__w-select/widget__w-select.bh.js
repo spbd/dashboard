@@ -1,5 +1,4 @@
 module.exports = function(bh) {
-
     bh.match('widget__w-select', function(ctx, json) {
         if(json.label) {
             ctx.content([
@@ -8,5 +7,4 @@ module.exports = function(bh) {
             ], true);
         }
     });
-
 };

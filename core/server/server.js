@@ -83,7 +83,9 @@ modules.define(
                 return [
                     {
                         id: 'TASKID-2313',
-                        desk: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi eligendi sint, expedita at beatae reprehenderit deserunt fugit totam neque unde.',
+                        desk: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi' +
+                            'eligendi sint, expedita at beatae reprehenderit deserunt fugit totam' +
+                            'neque unde.',
                         points: 40,
                         priority: 'critical',
                         reviewer: {
@@ -93,7 +95,9 @@ modules.define(
                     },
                     {
                         id: 'TASKID-2311',
-                        desk: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi eligendi sint, expedita at beatae reprehenderit deserunt fugit totam neque unde.',
+                        desk: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi' +
+                            'eligendi sint, expedita at beatae reprehenderit deserunt fugit totam' +
+                            'neque unde.',
                         points: 40,
                         priority: 'normal',
                         reviewer: {
@@ -103,7 +107,9 @@ modules.define(
                     },
                     {
                         id: 'TASKID-2113',
-                        desk: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi eligendi sint, expedita at beatae reprehenderit deserunt fugit totam neque unde.',
+                        desk: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi' +
+                            'eligendi sint, expedita at beatae reprehenderit deserunt fugit totam' +
+                            'neque unde.',
                         points: 40,
                         priority: 'critical',
                         reviewer: {
@@ -115,7 +121,7 @@ modules.define(
             }
         };
 
-        // startEmmiting();
+        startEmmiting();
 
         function on(path, fn) {
             paths.push(path);

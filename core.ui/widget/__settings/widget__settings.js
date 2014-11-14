@@ -3,30 +3,6 @@ modules.define(
     ['inherit', 'objects', 'i-bem__dom', 'bh'],
     function(provide, inherit, objects, BEMDOM, bh) {
 
-var TYPE = {
-        INPUT: 'input',
-        CHECKBOX: 'checkbox',
-        SELECT: 'select'
-    },
-    OPTIONS = {};
-
-OPTIONS[TYPE.INPUT] = {
-    placeholder: null,
-    label: null,
-    handler: null
-};
-
-OPTIONS[TYPE.CHECKBOX] = {
-    text: 'button',
-    checked: false,
-    handler: null
-};
-
-OPTIONS[TYPE.SELECT] = {
-    options: null,
-    handler: null
-};
-
 provide(BEMDOM.decl({
 
     onSetMod: {
@@ -54,8 +30,43 @@ provide(BEMDOM.decl({
         });
     },
 
+    _getControlData: function(control) {
+        var type = this.__self.TYPE;
+        switch(control.type) {
+            case type.INPUT: return {
+                block: 'widget',
+                elem: 'w-input',
+                label: control.props.label,
+                content: {
+                    block: 'input',
+                    mods: {theme: 'islands', size: 's'},
+                    placeholder: control.props.placeholder
+                }
+            };
+            case type.CHECKBOX: return {
+                    block: 'widget',
+                    elem: 'w-checkbox',
+                    content: {
+                        block: 'checkbox',
+                        text: control.props.text,
+                        mods: {theme: 'islands', size: 'm', checked: control.props.checked}
+                    }
+            };
+            case type.SELECT: return {
+                    block: 'widget',
+                    elem: 'w-select',
+                    label: control.props.label,
+                    content: {
+                        block: 'select',
+                        mods: {mode: 'radio', theme: 'islands', size: 's', width: 'available'},
+                        options: control.props.options
+                    }
+            };
+        }
+    },
+
     _checkOptions: function(opts, type) {
-        var allowedProps = Object.keys(OPTIONS[type]);
+        var allowedProps = Object.keys(this.__self.getPropsByType(type));
 
         Object
             .keys(opts)
@@ -86,7 +97,8 @@ provide(BEMDOM.decl({
     },
 
     buildControls: function() {
-        var container = this.findElem('set-controls');
+        var container = this.findElem('set-controls'),
+            type = this.__self.TYPE;
 
         this._config
             .controls
@@ -104,18 +116,18 @@ provide(BEMDOM.decl({
                 }
 
                 switch(control.type) {
-                    case TYPE.INPUT:
+                    case type.INPUT:
                         instance.domElem.on('change', function() {
                             control.props.handler(instance.getVal(), instance);
                         });
                         break;
-                    case TYPE.CHECKBOX:
+                    case type.CHECKBOX:
                         instance.findElem('control').on('change', function() {
                             var checked = !Boolean(instance.getMod('checked'));
                             control.props.handler(checked, instance);
                         });
                         break;
-                    case TYPE.SELECT:
+                    case type.SELECT:
                         instance.on('change', function() {
                             control.props.handler(instance.getVal(), instance);
                         });
@@ -125,21 +137,23 @@ provide(BEMDOM.decl({
     },
 
     getStates: function() {
+        var type = this.__self.TYPE;
         return this._controls.map(function(control) {
             switch(control.type) {
-                case TYPE.INPUT: return control.instance.getVal();
-                case TYPE.CHECKBOX: return Boolean(control.instance.getMod('checked'));
-                case TYPE.SELECT: return control.instance.getVal();
+                case type.INPUT: return control.instance.getVal();
+                case type.CHECKBOX: return Boolean(control.instance.getMod('checked'));
+                case type.SELECT: return control.instance.getVal();
             }
         });
     },
 
     setStates: function(settings) {
+        var type = this.__self.TYPE;
         this._controls.forEach(function(control) {
             switch(control.type) {
-                case TYPE.INPUT: return control.instance.setVal(settings.shift().value);
-                case TYPE.CHECKBOX: return control.instance.setMod('checked', settings.shift().value);
-                case TYPE.SELECT: return control.instance.setVal(settings.shift().value);
+                case type.INPUT: return control.instance.setVal(settings.shift().value);
+                case type.CHECKBOX: return control.instance.setMod('checked', settings.shift().value);
+                case type.SELECT: return control.instance.setVal(settings.shift().value);
             }
         });
     },
@@ -155,48 +169,9 @@ provide(BEMDOM.decl({
         });
     },
 
-    _getControlData: function(control) {
-        switch(control.type) {
-            case TYPE.INPUT: return {
-                block: 'widget',
-                elem: 'w-input',
-                label: control.props.label,
-                content: {
-                    block: 'input',
-                    mods: {theme: 'islands', size: 's'},
-                    placeholder: control.props.placeholder
-                }
-            };
-            case TYPE.CHECKBOX: return {
-                    block: 'widget',
-                    elem: 'w-checkbox',
-                    content: {
-                        block: 'checkbox',
-                        text: control.props.text,
-                        mods: {theme: 'islands', size: 'm', checked: control.props.checked}
-                    }
-            };
-            case TYPE.SELECT: return {
-                    block: 'widget',
-                    elem: 'w-select',
-                    label: control.props.label,
-                    content: {
-                        block: 'select',
-                        mods: {mode: 'radio', theme: 'islands', size: 's', width: 'available'},
-                        options: control.props.options
-                    }
-            };
-        }
-    },
-
-    destruct: function() {
-        this._controls.forEach(function(control) {
-            BEMDOM.destruct(control.instance.domElem);
-        });
-    },
-
     API: function() {
         var _this = this,
+            type = this.__self.TYPE,
             API = {
                 setProps: function(props) {
                     objects.extend(_this._config.props, props);
@@ -204,22 +179,61 @@ provide(BEMDOM.decl({
                 },
 
                 input: function(props) {
-                    _this._pushControl(props, TYPE.INPUT);
+                    _this._pushControl(props, type.INPUT);
                     return API;
                 },
 
                 checkbox: function(props) {
-                    _this._pushControl(props, TYPE.CHECKBOX);
+                    _this._pushControl(props, type.CHECKBOX);
                     return API;
                 },
 
                 select: function(props) {
-                    _this._pushControl(props, TYPE.SELECT);
+                    _this._pushControl(props, type.SELECT);
                     return API;
                 }
             };
 
         return API;
+    },
+
+    destruct: function() {
+        this._controls.forEach(function(control) {
+            BEMDOM.destruct(control.instance.domElem);
+        });
+    }
+
+}, {
+
+    TYPE: {
+        INPUT: 'input',
+        CHECKBOX: 'checkbox',
+        SELECT: 'select'
+    },
+
+    getPropsByType: function(type) {
+        switch(type) {
+            case this.TYPE.INPUT: {
+                return  {
+                    placeholder: null,
+                    label: null,
+                    handler: null
+                };
+            }
+            case this.TYPE.CHECKBOX: {
+                return {
+                    text: 'button',
+                    checked: false,
+                    handler: null
+                };
+            }
+            case this.TYPE.SELECT: {
+                return {
+                    options: null,
+                    handler: null
+                };
+            }
+        }
     }
 
 }));

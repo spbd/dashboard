@@ -36,35 +36,24 @@ provide(BEMDOM.decl(this.name, {
 
     _initBaseWidget: function() {
         // TODO: Move all events to live section
-
         this._settings.buildControls();
 
         this._id = this._baseWidget.params.id || (Math.random() * 0x10000000000).toString(36);
         this._moving = {};
 
-        this._baseWidget
-            .findElem('adds-settings')
-            .on('click', this._onShowSettings.bind(this));
-
-        this._baseWidget
-            .findElem('adds-remove')
-            .on('click', this._onRemove.bind(this));
-
-        this._baseWidget
-            .findBlockInside(this._baseWidget.findElem('set-save'), 'button')
+        this._baseWidget.findElem('adds-settings').on('click', this._onShowSettings.bind(this));
+        this._baseWidget.findElem('adds-remove').on('click', this._onRemove.bind(this));
+        this._baseWidget.findBlockInside(this._baseWidget.findElem('set-save'), 'button')
             .on('click', this._onShowContent.bind(this));
-
         this._baseWidget.findElem('adds-pane').on('mousedown', this._paneDown.bind(this));
         this._baseWidget.findElem('adds-resize').on('mousedown', this._resizeDown.bind(this));
 
         this.bindToWin('mouseup', this._winUp.bind(this));
 
+        // Loading widget from storage
         if(!this._baseWidget.params.id) {
-
             this.bindToWin('mousemove', this._initWinMove);
-            this._baseWidget
-                .findElem('adds-controls')
-                .one('click', this._initWinClick.bind(this));
+            this._baseWidget.findElem('adds-controls').one('click', this._initWinClick.bind(this));
 
             this._baseWidget.elem('container').css({
                 width: this._cfg.getProps().width,
@@ -73,7 +62,6 @@ provide(BEMDOM.decl(this.name, {
         }
 
         nextTick(this._recalculateFontsSize.bind(this));
-
         this._fontResizer = throttle(this._resizeFonts.bind(this), 100);
     },
 
@@ -135,9 +123,8 @@ provide(BEMDOM.decl(this.name, {
             w = e.pageX - mv.offsetX,
             h = e.pageY - mv.offsetY;
 
-        if(w < 70 || h < 50) {
-            return;
-        }
+        // Min width and height
+        if(w < 150 || h < 150) {return;}
 
         target.elem('container').css({width: w, height: h});
 

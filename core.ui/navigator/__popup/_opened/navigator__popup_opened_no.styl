@@ -1,29 +1,37 @@
 .navigator__popup_opened_no
-  -webkit-animation-name: bounceOut;
-  animation-name: bounceOut;
-  -webkit-animation-duration: .75s;
-  animation-duration: .75s;
-  pointer-events: none
+{
+    -webkit-animation-name: bounceOut;
+            animation-name: bounceOut;
+    -webkit-animation-duration: .75s;
+            animation-duration: .75s;
 
-@keyframes bounceOut {
-  0% {
-    opacity : 0.7
-  }
+    pointer-events: none;
+}
 
-  20% {
-    -webkit-transform: scale3d(.9, .9, .9);
-            transform: scale3d(.9, .9, .9);
-  }
+@keyframes bounceOut
+{
+    0%
+    {
+        opacity: 0.7;
+    }
 
-  50%, 55% {
-    opacity: 0.7;
-    -webkit-transform: scale3d(1.1, 1.1, 1.1);
-            transform: scale3d(1.1, 1.1, 1.1);
-  }
+    20%
+    {
+        -webkit-transform: scale3d(.9, .9, .9);
+                transform: scale3d(.9, .9, .9);
+    }
 
-  100% {
-    opacity: 0;
-    -webkit-transform: scale3d(.3, .3, .3);
-            transform: scale3d(.3, .3, .3);
-  }
+    50%, 55%
+    {
+        opacity: 0.7;
+        -webkit-transform: scale3d(1.1, 1.1, 1.1);
+                transform: scale3d(1.1, 1.1, 1.1);
+    }
+
+    100%
+    {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+                transform: scale3d(.3, .3, .3);
+    }
 }
