@@ -1,8 +1,9 @@
 {
     "freeze_paths": {
         "libs/**": "static",
-        "widgets/**": "static",
-        "uicore/**": "static"
+        "widgets.base/**": "static",
+        "widgets.specific/**": "static",
+        "core.ui/**": "static"
     },
     "paths" : {
         "./": "../"

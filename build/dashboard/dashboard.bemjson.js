@@ -9,9 +9,5 @@
         { elem: 'meta', attrs: { name: 'description', content: '' }},
         { elem: 'meta', attrs: { name: 'keywords', content: '' }}
     ],
-    content: {
-        block: 'board',
-        js: true,
-        content: {block: 'navigator'}
-    }
+    content: {block: 'board', content: {block: 'navigator'}}
 });
