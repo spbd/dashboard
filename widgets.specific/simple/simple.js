@@ -39,8 +39,12 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
 
                     // board.notify('Simple: bad connection');
                     //
-                    server.on('widgets/free-space', function(e, data) {
+                    server.on(
+                        'widgets/staging-space/change',
+                        function(e, data) {
+
                         console.log(data);
+
                     });
             }
         }
