@@ -27,11 +27,7 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                             ], handler: this._onInputChange, label: 'Super Checkbox'})
                             .input({placeholder: 'hint', label: 'Text area', handler: this._onInputChange})
                             .checkbox({text: 'Use normal load', checked: true, handler: this._onInputChange})
-                            .select({options: [
-                                {val: '1', text: 't1'},
-                                {val: '2', text: 't2', checked: true},
-                                {val: '3', text: 't3'}
-                            ], handler: this._onInputChange, label: 'Trolololo'});
+                            .select({update: this._updateSelect, handler: this._onInputChange, label: 'Trolololo'});
                     })
                     .onSaveSettings(function(controls) {
                         console.log('Settings save', controls);
@@ -52,10 +48,19 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                         function(e, data) {
 
                         console.log(data);
-
                     });
             }
         }
+    },
+
+    _updateSelect: function(select) {
+        setTimeout(function() {
+            select.update([
+                {val: '1', text: 't1'},
+                {val: '2', text: 't2', checked: true},
+                {val: '3', text: 't3'}
+            ]);
+        }, 3000);
     },
 
     _onInputChange: function(text, elem) {
