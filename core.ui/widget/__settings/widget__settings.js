@@ -26,7 +26,7 @@ provide(BEMDOM.decl({
         this._checkOptions(props, type);
         this._config.controls.push({
             type: type,
-            props: props
+            props: objects.extend(this.__self.getPropsByType(type), props)
         });
     },
 
@@ -59,7 +59,8 @@ provide(BEMDOM.decl({
                     content: {
                         block: 'select',
                         mods: {mode: 'radio', theme: 'islands', size: 's', width: 'available'},
-                        options: control.props.options
+                        options: control.props.options ||
+                            [{val: '0', text: 'Loading', checked: true}]
                     }
             };
             case type.RADIO_GROUP: return {
@@ -113,7 +114,8 @@ provide(BEMDOM.decl({
         this._config
             .controls
             .forEach(function(control) {
-                var ctx = BEMDOM.append(container, bh.apply(this._getControlData(control))),
+                var data = this._getControlData(control),
+                    ctx = BEMDOM.append(container, bh.apply(data)),
                     instance = this.findBlockInside(ctx, control.type);
 
                 this._controls.push({
@@ -138,6 +140,10 @@ provide(BEMDOM.decl({
                         });
                         break;
                     case type.SELECT:
+                        control.props
+                            ._update
+                            .call(this, instance, this._getControlData(control));
+
                         instance.on('change', function() {
                             control.props.handler(instance.getVal(), instance);
                         });
@@ -252,10 +258,33 @@ provide(BEMDOM.decl({
                 };
             }
             case this.TYPE.SELECT: {
-                return {
+                var obj = {
                     options: null,
-                    handler: null
+                    handler: null,
+                    update: null,
+                    _update: function(select, data) {
+                        if(!obj.update) {
+                            return false;
+                        }
+                        var selData = data.content,
+                            _this = this;
+
+                        obj.update({
+                            update: function(options) {
+                                selData.options = options;
+                                var instance = BEMDOM.replace(
+                                        select.findBlockInside('select').domElem,
+                                        bh.apply(selData)
+                                    ),
+                                    sel = _this.findBlockInside(instance, 'select');
+                                    sel.on('change', function() {
+                                        obj.handler(sel.getVal(), sel);
+                                    });
+                            }
+                        });
+                    }
                 };
+                return obj;
             }
             case this.TYPE.RADIO_GROUP: {
                 return {

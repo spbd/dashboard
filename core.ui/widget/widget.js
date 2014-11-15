@@ -13,6 +13,8 @@ provide(BEMDOM.decl(this.name, {
                     _this._baseWidget = _this.findBlockOutside('widget');
                     _this._settings = _this._baseWidget.findElemInstance('settings');
 
+                    _this.settings = _this._settings;
+
                     cb.call(_this, _this._cfg.API(), _this._settings.API());
 
                     return API;
