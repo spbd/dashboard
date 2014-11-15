@@ -128,6 +128,17 @@ modules.define(
             return emmiter.on(path, fn);
         }
 
+        function un(path) {
+            if(paths && paths.length > 0) {
+                paths.forEach(function(pathItem, idx) {
+                    if(pathItem === path) {
+                        paths.splice(idx, 1);
+                    }
+                });
+                return emmiter.un(path);
+            }
+        }
+
         function startEmmiting() {
             setInterval(function() {
                 paths.forEach(function(path) {
@@ -139,7 +150,8 @@ modules.define(
         }
 
 provide({
-    on: on
+    on: on,
+    un: un
 });
 
 });
