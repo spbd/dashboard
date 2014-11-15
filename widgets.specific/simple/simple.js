@@ -17,10 +17,14 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
 
                         settings
                             .setProps({width: 200, height: 260})
-                            .input({placeholder: 'hint', label: 'Text area', handler: this._onInputChange})
-                            .checkbox({text: 'Use normal', handler: this._onInputChange})
-                            .checkbox({text: 'normal', handler: this._onInputChange})
-                            .input({placeholder: 'hint', label: 'Text area', handler: this._onInputChange})
+                            .radioGroup({options:[
+                                {val: 1, text: 'first'},
+                                {val: 2, text: 'first'},
+                                {val: 3, text: 'second', checked: true},
+                                {val: 4, text: 'third'},
+                                {val: 5, text: 'second'}
+
+                            ], handler: this._onInputChange, label: 'Super Checkbox'})
                             .input({placeholder: 'hint', label: 'Text area', handler: this._onInputChange})
                             .checkbox({text: 'Use normal load', checked: true, handler: this._onInputChange})
                             .select({options: [

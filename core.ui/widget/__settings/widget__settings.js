@@ -62,6 +62,16 @@ provide(BEMDOM.decl({
                         options: control.props.options
                     }
             };
+            case type.RADIO_GROUP: return {
+                    block: 'widget',
+                    elem: 'w-radio-group',
+                    label: control.props.label,
+                    content: {
+                        block: 'radio-group',
+                        mods: {theme: 'islands', size: 'm', type: 'line'},
+                        options: control.props.options
+                    }
+            };
         }
     },
 
@@ -132,6 +142,11 @@ provide(BEMDOM.decl({
                             control.props.handler(instance.getVal(), instance);
                         });
                         break;
+                    case type.RADIO_GROUP:
+                        instance.on('change', function() {
+                            control.props.handler(instance.getVal(), instance);
+                        });
+                        break;
                 }
             }, this);
     },
@@ -143,6 +158,7 @@ provide(BEMDOM.decl({
                 case type.INPUT: return control.instance.getVal();
                 case type.CHECKBOX: return Boolean(control.instance.getMod('checked'));
                 case type.SELECT: return control.instance.getVal();
+                case type.RADIO_GROUP: return control.instance.getVal();
             }
         });
     },
@@ -154,6 +170,7 @@ provide(BEMDOM.decl({
                 case type.INPUT: return control.instance.setVal(settings.shift().value);
                 case type.CHECKBOX: return control.instance.setMod('checked', settings.shift().value);
                 case type.SELECT: return control.instance.setVal(settings.shift().value);
+                case type.RADIO_GROUP: return control.instance.setVal(settings.shift().value);
             }
         });
     },
@@ -191,6 +208,11 @@ provide(BEMDOM.decl({
                 select: function(props) {
                     _this._pushControl(props, type.SELECT);
                     return API;
+                },
+
+                radioGroup: function(props) {
+                    _this._pushControl(props, type.RADIO_GROUP);
+                    return API;
                 }
             };
 
@@ -208,9 +230,11 @@ provide(BEMDOM.decl({
     TYPE: {
         INPUT: 'input',
         CHECKBOX: 'checkbox',
-        SELECT: 'select'
+        SELECT: 'select',
+        RADIO_GROUP: 'radio-group'
     },
 
+    // default properties of the object
     getPropsByType: function(type) {
         switch(type) {
             case this.TYPE.INPUT: {
@@ -228,6 +252,12 @@ provide(BEMDOM.decl({
                 };
             }
             case this.TYPE.SELECT: {
+                return {
+                    options: null,
+                    handler: null
+                };
+            }
+            case this.TYPE.RADIO_GROUP: {
                 return {
                     options: null,
                     handler: null

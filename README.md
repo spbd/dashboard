@@ -233,6 +233,15 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
         handler: this.handle, // обработчик состояния change
         label: 'Foo select'   // метка (опциональное поле)
     });
+    .radioGroup({   // создать radio-group
+        options: [ // элементы
+            {val: '1', text: 'text1'},
+            {val: '2', text: 'text2', checked: true},
+            {val: '3', text: 'text3'}
+        ],
+        handler: this.handle, // обработчик состояния change
+        label: 'This is super radio-group'   // метка (опциональное поле)
+    });
 
     // Во все обработчики приходит параметр,
     // содержащий новое состояние элемента
