@@ -35,6 +35,10 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                     .onShowSettings(function() {
                         console.log('Settings show');
                     })
+                    .onLoadWidget(function() {
+                        console.log('Widget load');
+                        console.log(arguments);
+                    })
                     .init();
 
                     // board.notify('Simple: bad connection');

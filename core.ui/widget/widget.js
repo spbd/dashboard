@@ -21,6 +21,10 @@ provide(BEMDOM.decl(this.name, {
                     _this._onSaveSettingsCb = cb;
                     return API;
                 },
+                onLoadWidget: function(cb) {
+                    _this._onLoadWidgetCb = cb;
+                    return API;
+                },
                 onShowSettings: function(cb) {
                     _this._onShowSettingsCb = cb;
                     return API;
@@ -59,6 +63,10 @@ provide(BEMDOM.decl(this.name, {
                 width: this._cfg.getProps().width,
                 height: this._cfg.getProps().height
             });
+        } else {
+            nextTick(function() {
+                this._onLoadWidgetCb(this._settings.getStates());
+            }.bind(this));
         }
 
         nextTick(this._recalculateFontsSize.bind(this));
