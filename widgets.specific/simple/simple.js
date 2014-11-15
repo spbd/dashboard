@@ -11,7 +11,7 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                 this
                     .widgetAPI()
                     .configure(function(widget, settings) {
-                        widget.setProps({width: 400, height: 160});
+                        widget.setProps({width: 400, height: 160, fontResize: false});
 
                         // win min / win max
 

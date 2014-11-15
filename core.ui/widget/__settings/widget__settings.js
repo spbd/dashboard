@@ -125,6 +125,7 @@ provide(BEMDOM.decl({
 
                 if(!control.props.handler) {
                     return;
+                    // WTF?
                 }
 
                 switch(control.type) {

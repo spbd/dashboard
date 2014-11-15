@@ -11,7 +11,8 @@ provide(inherit({
             props: {
                 width: 200,
                 height: 200,
-                scalable: false
+                scalable: true,
+                fontResize: false
             }
         };
     },
@@ -20,11 +21,16 @@ provide(inherit({
         return this._config.props;
     },
 
+    getProp: function(prop) {
+        return this._config.props[prop];
+    },
+
     API: function() {
         var _this = this,
             API = {
                 setProps: function(props) {
                     objects.extend(_this._config.props, props);
+                    console.log(props);
                     return API;
                 }
             };

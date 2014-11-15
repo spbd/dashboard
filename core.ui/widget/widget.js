@@ -67,11 +67,11 @@ provide(BEMDOM.decl(this.name, {
             });
         } else {
             nextTick(function() {
-                this._onLoadWidgetCb(this._settings.getStates());
+                this._onLoadWidgetCb && this._onLoadWidgetCb(this._settings.getStates());
             }.bind(this));
         }
 
-        nextTick(this._recalculateFontsSize.bind(this));
+        this._cfg.getProp('fontResize') && nextTick(this._recalculateFontsSize.bind(this));
         this._fontResizer = throttle(this._resizeFonts.bind(this), 100);
     },
 
@@ -138,7 +138,7 @@ provide(BEMDOM.decl(this.name, {
 
         target.elem('container').css({width: w, height: h});
 
-        this._fontResizer();
+        this._cfg.getProp('fontResize') && this._fontResizer();
     },
 
     _resizeFonts: function() {
