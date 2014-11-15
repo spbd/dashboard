@@ -14,7 +14,8 @@ var levels = require('enb-bem-techs/techs/levels'),
     widgetsList = require('./techs/widgets-list'),
     widgetsDecl = require('./techs/widgets-decl'),
     widgetsYm = require('./techs/widgets-ym'),
-    widgetsManifest = require('./techs/widgets-manifest');
+    widgetsManifest = require('./techs/widgets-manifest'),
+    cssAutoprefixer = require('enb-autoprefixer/techs/css-autoprefixer');
 
 module.exports = function(config) {
     var node = 'build/dashboard';
@@ -31,6 +32,17 @@ module.exports = function(config) {
             [widgetsYm],
             [widgetsManifest],
             [css, {target: '?.source.css'}],
+
+
+            [cssAutoprefixer, {
+                sourceTarget: '?.source.css',
+                destTarget: '?.prefixed.css',
+                browserSupport: ['last 2 versions', 'ie 10', 'opera 12.16']
+            }],
+
+
+
+
             [js, { target : '?.source.js' }],
             [ym, {
                 source : '?.source.js',
@@ -44,7 +56,7 @@ module.exports = function(config) {
             }],
             [mergeFiles, {
                 target : '?.css',
-                sources : ['?.source.css', '?.manifest.css']
+                sources : ['?.prefixed.css', '?.manifest.css']
             }],
             [html]
         ]);
