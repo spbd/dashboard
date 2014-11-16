@@ -8,6 +8,7 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
     onSetMod: {
         js: {
             inited: function() {
+                var _this = this;
                 this
                     .widgetAPI()
                     .configure(function(widget, settings) {
@@ -21,33 +22,35 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                                 label: 'Select library'
                             });
                     })
+                    .onLoadWidget(function() {
+                        console.log('server,', _this.server);
+                        _this.server.on('update', function(data) {
+                            _this._branches = data;
+                            _this._drawBranches();
+                        });
+                    })
                     .init();
-
-                    server.on('widgets/lib-status/change', function(e, data) {
-                        this._branches = data[this._selectedLib];
-                        this._drawBranches();
-                    }.bind(this));
             }
         }
     },
 
     _updateSelect: function(select) {
-        setTimeout(function() {
-            var opts = ['Library1', 'Library2'].map(function(lib) {
-                return {val: lib, text: lib};
-            });
+        this.server.get('libs', function(data) {
+            var libs = data.map(function(lib) {
+                    return {val: lib, text: lib};
+                });
 
-            opts[0].checked = true;
-            select.update(opts);
+                libs[0].checked = true;
+                select.update(libs);
 
-            this._selectedLib = opts[0].text;
-            // this.server.emit('lib', opts[0].text);
-        }.bind(this), 1000);
+                this._selectedLib = libs[0].text;
+                this.server.emit('init', {lib: this._selectedLib});
+        }.bind(this));
     },
 
     _onSelectChange: function(lib, elem) {
         this._selectedLib = lib;
-        // this.server.emit('lib', lib);
+        this.server.emit('init', {lib: this._selectedLib});
 
         BEMDOM.update(this.elem('container'), bh.apply({
             block: 'lib-status',

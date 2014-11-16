@@ -1,6 +1,7 @@
 ({
     shouldDeps: [
         {block: 'inherit'},
-        {block: 'events'}
+        {block: 'events'},
+        {block: 'socket'}
     ]
 });

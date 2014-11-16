@@ -1,7 +1,7 @@
 modules.define(
     'widget__creator',
-    ['inherit', 'objects', 'i-bem__dom', 'bh'],
-    function(provide, inherit, objects, BEMDOM, bh) {
+    ['inherit', 'objects', 'i-bem__dom', 'bh', 'next-tick'],
+    function(provide, inherit, objects, BEMDOM, bh, nextTick) {
 
 provide(BEMDOM.decl({
 
@@ -116,7 +116,12 @@ provide(BEMDOM.decl({
             .forEach(function(control) {
                 var data = this._getControlData(control),
                     ctx = BEMDOM.append(container, bh.apply(data)),
-                    instance = this.findBlockInside(ctx, control.type);
+                    instance = this.findBlockInside(ctx, control.type),
+                    cb = function(h, val, instance) {
+                        nextTick(function() {
+                            h(val, instance);
+                        });
+                    };
 
                 if(control.type !== type.SELECT) {
                     this._controls.push({
@@ -133,27 +138,27 @@ provide(BEMDOM.decl({
                 switch(control.type) {
                     case type.INPUT:
                         instance.domElem.on('change', function() {
-                            control.props.handler(instance.getVal(), instance);
+                            cb(control.props.handler, instance.getVal(), instance);
                         });
                         break;
                     case type.CHECKBOX:
                         instance.findElem('control').on('change', function() {
                             var checked = !Boolean(instance.getMod('checked'));
-                            control.props.handler(checked, instance);
+                            cb(control.props.handler, checked, instance);
                         });
                         break;
                     case type.SELECT:
-                        control.props
-                            ._update
-                            .call(this, instance, control);
+                        nextTick(function() {
+                            control.props._update.call(this, instance, control);
+                        }.bind(this));
 
                         instance.on('change', function() {
-                            control.props.handler(instance.getVal(), instance);
+                            cb(control.props.handler, instance.getVal(), instance);
                         });
                         break;
                     case type.RADIO_GROUP:
                         instance.on('change', function() {
-                            control.props.handler(instance.getVal(), instance);
+                            cb(control.props.handler, instance.getVal(), instance);
                         });
                         break;
                 }
