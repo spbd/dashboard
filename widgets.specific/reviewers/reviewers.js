@@ -114,7 +114,7 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
             // var createdStyleTag = document.createElement('style');
             var animStyles = '.reviewers_scroll .reviewers__list {' +
                 '  -webkit-animation: slideright ' + 2 * itemsNumber + 's linear 0s infinite alternate;' +
-                '  animation: slideright 24s linear 0s infinite alternate;' +
+                '  animation: slideright ' + 2 * itemsNumber + 's linear 1s infinite alternate;' +
                 '}' +
                 '@-webkit-keyframes slideright {' +
                 '  from {' +
@@ -122,7 +122,7 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                 '    transform: translateX(0);' +
                 '  }' +
                 '  to {' +
-                '    -webkit-transform: translateX(-439px);' +
+                '    -webkit-transform: translateX(-' + delta + 'px);' +
                 '    transform: translateX(-' + delta + 'px);' +
                 '  }' +
                 '}' +
@@ -132,8 +132,8 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                 '    transform: translateX(0);' +
                 '  }' +
                 '  to {' +
-                '    -webkit-transform: translateX(-439px);' +
-                '    transform: translateX(-439px);' +
+                '    -webkit-transform: translateX(-' + delta + 'px);' +
+                '    transform: translateX(-' + delta + 'px);' +
                 '  }' +
                 '}';
 

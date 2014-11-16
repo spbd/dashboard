@@ -13,7 +13,6 @@ provide(BEMDOM.decl(this.name, {
                     _this._cfg = _this._cfg || new Config();
                     _this._baseWidget = _this.findBlockOutside('widget');
                     _this._settings = _this._baseWidget.findElemInstance('settings');
-                    _this.settings = _this._settings;
 
                     _this.settings = _this._settings;
 
@@ -77,6 +76,7 @@ provide(BEMDOM.decl(this.name, {
         this._fontResizer = throttle(this._resizeFonts.bind(this), 100);
 
         this.server = new Server(this._id, this.__self._blockName);
+        console.log('server: ', this.server);
     },
 
     _resizeDown: function(e) {
