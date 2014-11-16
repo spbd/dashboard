@@ -10,6 +10,8 @@ provide(BEMDOM.decl(this.name, {
         var _this = this,
             API = {
                 configure: function(cb) {
+                    _this._inited = false;
+
                     _this._cfg = _this._cfg || new Config();
                     _this._baseWidget = _this.findBlockOutside('widget');
                     _this._settings = _this._baseWidget.findElemInstance('settings');
@@ -38,7 +40,8 @@ provide(BEMDOM.decl(this.name, {
                 },
                 init: function(cb) {
                     _this._initBaseWidget();
-                    if(typeof _this._onLoadWidgetCb === 'function'){ 
+                    if(typeof _this._onLoadWidgetCb === 'function' && !_this._inited) {
+                        _this._inited = true; 
                         _this._onLoadWidgetCb(_this.settings.getStates()); 
                     }
                     return API;
@@ -92,7 +95,10 @@ provide(BEMDOM.decl(this.name, {
             });
         } else {
             nextTick(function() {
-                this._onLoadWidgetCb && this._onLoadWidgetCb(this._settings.getStates());
+                if(this._onLoadWidgetCb && !this._inited) {
+                    this._onLoadWidgetCb(this._settings.getStates());
+                    _this._inited = true;
+                }
             }.bind(this));
         }
 
