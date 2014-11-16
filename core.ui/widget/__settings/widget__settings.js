@@ -118,10 +118,12 @@ provide(BEMDOM.decl({
                     ctx = BEMDOM.append(container, bh.apply(data)),
                     instance = this.findBlockInside(ctx, control.type);
 
-                this._controls.push({
-                    type: control.type,
-                    instance: instance
-                });
+                if(control.type !== type.SELECT) {
+                    this._controls.push({
+                        type: control.type,
+                        instance: instance
+                    });
+                }
 
                 if(!control.props.handler) {
                     return;
@@ -143,7 +145,7 @@ provide(BEMDOM.decl({
                     case type.SELECT:
                         control.props
                             ._update
-                            .call(this, instance, this._getControlData(control));
+                            .call(this, instance, control);
 
                         instance.on('change', function() {
                             control.props.handler(instance.getVal(), instance);
@@ -263,11 +265,12 @@ provide(BEMDOM.decl({
                     options: null,
                     handler: null,
                     update: null,
-                    _update: function(select, data) {
+                    _update: function(select, control) {
                         if(!obj.update) {
                             return false;
                         }
-                        var selData = data.content,
+                        var data = this._getControlData(control),
+                            selData = data.content,
                             _this = this;
 
                         obj.update({
@@ -281,6 +284,11 @@ provide(BEMDOM.decl({
                                     sel.on('change', function() {
                                         obj.handler(sel.getVal(), sel);
                                     });
+
+                                _this._controls.push({
+                                    type: control.type,
+                                    instance: instance.bem('select')
+                                });
                             }
                         });
                     }
