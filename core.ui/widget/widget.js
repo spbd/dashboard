@@ -99,6 +99,7 @@ provide(BEMDOM.decl(this.name, {
         this._fontResizer = throttle(this._resizeFonts.bind(this), 100);
 
         this.server = new Server(this._id, this.__self._blockName);
+        console.log('server: ', this.server);
     },
 
     _resizeDown: function(e) {
