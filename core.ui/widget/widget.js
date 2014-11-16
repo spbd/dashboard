@@ -1,11 +1,12 @@
 modules.define(
     'widget',
-    ['i-bem__dom', 'jquery', 'widget__config', 'bh', 'next-tick', 'functions__throttle'],
-    function(provide, BEMDOM, $, Config, bh, nextTick, throttle) {
+    ['i-bem__dom', 'jquery', 'widget__config', 'bh', 'next-tick', 'functions__throttle', 'server'],
+    function(provide, BEMDOM, $, Config, bh, nextTick, throttle, Server) {
 
 provide(BEMDOM.decl(this.name, {
 
     widgetAPI: function widgetAPI() {
+
         var _this = this,
             API = {
                 configure: function(cb) {
@@ -73,6 +74,8 @@ provide(BEMDOM.decl(this.name, {
 
         this._cfg.getProp('fontResize') && nextTick(this._recalculateFontsSize.bind(this));
         this._fontResizer = throttle(this._resizeFonts.bind(this), 100);
+
+        this.server = new Server(this._id, this.__self._blockName);
     },
 
     _resizeDown: function(e) {
