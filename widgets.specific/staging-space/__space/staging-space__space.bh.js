@@ -3,12 +3,12 @@ module.exports = function(bh) {
         ctx.content([
             {
                 elem: 'value',
-                content: 'in megabytes'
+                content: 'No data received yet...'
             },
             
             {
                 elem: 'percents',
-                content: 'in percents'
+                content: ''
             }
         ]);
     });

@@ -33,11 +33,12 @@ provide(BEMDOM.decl(this.name, {
                     return API;
                 },
                 onResize: function(cb) {
-                    _this._onResize = cb;
+                    _this._onResizeCallback = cb;
                     return API;
                 },
-                init: function() {
+                init: function(cb) {
                     _this._initBaseWidget();
+                    if(typeof _this._onLoadWidgetCb === 'function'){ _this._onLoadWidgetCb(); }
                     return API;
                 }
             };
@@ -45,13 +46,21 @@ provide(BEMDOM.decl(this.name, {
         return API;
     },
 
-    _onResizeCallbacks: [],
+    _onResize: function(props) {
 
-    _onResize: function() {
-
-        if (typeof this.onResize === 'function') this.onResize();
+        if(typeof this._onResizeCallback === 'function') { this._onResizeCallback(props); }
         this._cfg.getProp('fontResize') && this._fontResizer();
+        this._baseWidget.elem('container').css({width: props.width, height: props.height});
 
+    },
+
+    _resize: function() {
+        this._scanTextNodes();
+
+        var w = this._baseWidget.elem('container').width(),
+            h = this._baseWidget.elem('container').height();
+
+        this._onResize({width: w, height: h});
     },
 
     _initBaseWidget: function() {
@@ -85,8 +94,8 @@ provide(BEMDOM.decl(this.name, {
             }.bind(this));
         }
 
+        this._resize();
         this._cfg.getProp('fontResize') && nextTick(this._recalculateFontsSize.bind(this));
-        this._onResize();
         this._fontResizer = throttle(this._resizeFonts.bind(this), 100);
 
         this.server = new Server(this._id, this.__self._blockName);
@@ -145,17 +154,14 @@ provide(BEMDOM.decl(this.name, {
     },
 
     _resizeWinMove: function(e) {
-        var target = this._baseWidget,
-            mv = this._moving,
+        var mv = this._moving,
             w = e.pageX - mv.offsetX,
             h = e.pageY - mv.offsetY;
 
         // Min width and height
-        if (w < 150 || h < 150) {return;}
+        if(w < 150 || h < 150) {return;}
 
-        target.elem('container').css({width: w, height: h});
-
-        this._onResize();
+        this._onResize({width: w, height: h});
     },
 
     _resizeFonts: function() {
@@ -260,6 +266,7 @@ provide(BEMDOM.decl(this.name, {
             }.bind(this));
 
         this._removeFromStorage();
+        // this._destroy();
     },
 
     _saveToStorage: function() {
@@ -299,6 +306,23 @@ provide(BEMDOM.decl(this.name, {
 
         localStorage.setItem('widgets', JSON.stringify(widgets) || '');
     }
+
+    // addServerListener: function(serverPath, callback) {
+    //     server.on(serverPath, callback);
+    //     this._serverListeners.push({path: serverPath, func: callback});
+    // },
+
+    // _serverListeners: [],
+
+    // _onDestroy: function() {
+    //     this._serverListeners.forEach(function(listener){
+    //         server.off(listener.path, listener.func);
+    //     })
+    // },
+
+    // _destroy: function() {
+    //     this._onDestroy();
+    // }
 
 }));
 

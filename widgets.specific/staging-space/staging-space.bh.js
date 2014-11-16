@@ -4,13 +4,21 @@ module.exports = function(bh) {
         
         ctx.content([
             {
-                elem: 'space',
-                mods: {type: 'available'}
+                elem: 'title',
+                content: 'Staging space'
             },
-            
             {
-                elem: 'space',
-                mods: {type: 'used'}
+                elem: 'container',
+                content: [
+                    {
+                        elem: 'space',
+                        mods: {type: 'available'}
+                    },
+                    {
+                        elem: 'space',
+                        mods: {type: 'used'}
+                    }
+                ]
             }
         ]);
     

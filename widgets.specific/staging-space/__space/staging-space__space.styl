@@ -1,8 +1,4 @@
-$red = #CB5C5C
-$blue = #5AB6C7
-$grey = #646464
-$lightGrey = #E0DBDB
-$greenGrey = #4F6771
+$grey = #646464;
 
 .staging-space
 {
@@ -14,7 +10,6 @@ $greenGrey = #4F6771
 
       display: flex;
       align-items: center;
-      justify-content: center;
 
       &_type_used
       {
@@ -31,7 +26,11 @@ $greenGrey = #4F6771
       }    
     }
 
-  
+    &__value
+    {
+      text-align: center;
+      width: 100%;
+    }  
 
     &__percents
     {

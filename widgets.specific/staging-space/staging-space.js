@@ -1,7 +1,7 @@
 modules.define(
     'staging-space',
-    ['i-bem__dom', 'jquery', 'widget', 'server'],
-    function(provide, BEMDOM, $, Widget, server) {
+    ['i-bem__dom', 'jquery', 'widget'],
+    function(provide, BEMDOM, $, Widget) {
 
 provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
 
@@ -10,132 +10,180 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
             inited: function() {
                 var _this = this;
 
+                _this._metric = {
+                    label: 'GB',  // Default value...
+                    divider: 1024, // divide our megabytes on this coefficient
+                    minDisplayVal: 15, // minimum percents of val, that will be displayed
+                    minDisplayPercents: 25,
+                    rankToDisplay: 1 // megabytes will not display any numbers after ',' in floats
+                };
+                
+                // data values 
+                // they update every 'data receieved' event
+                _this._values = {
+                    used: {
+                        val: 60000, // always in megabytes
+                        percents: 60 // alwayes in percents
+                    },
+                    available: {
+                        val: 40000,
+                        percents: 40
+                    }
+                };
+
+                _this._oldValues = {
+                    used: {
+                        val: 60000, 
+                        percents: 60
+                    },
+                    available: {
+                        val: 40000, 
+                        percents: 40
+                    }
+                };
+
+                _this.animationTime = 2000; // default animation time in milliseconds
+                _this._tickTime = 30;
+                _this._animating = false; // true/false if animation is in process
+                
+                _this._valElements = {}; // we will cache here elements, that display values
+                _this._percentsElements = {}; // we will cache here elements, that display percents
+                _this._spaceElements = {};
+                _this._containerElement = false;
+                _this._titleElement = false;
+
+                _this._elementsCached = false;
+
                 _this
                     .widgetAPI()
                     .configure(function(widget, settings) {
-                        widget.setProps({width: 400, height: 160});
+                        widget.setProps({width: 300, height: 350});
 
                         settings
-                            .setProps({width: 200, height: 260})
+                            .setProps({width: 150, height: 150})
                             
-                            .radioGroup({options:[
-                                {val: 'mb', text: 'Megabytes', checked: true},
-                                {val: 'gb', text: 'Gigabytes'}
-                            ], label: 'Metric'})
-
-                    })
-                    .onSaveSettings(function(controls) {
-                        console.log('Settings save', controls);
-                        _this._onMetricChange.bind(_this);
-
-                    })
-                    .onShowSettings(function() {
-                        console.log('Settings show');
+                            .radioGroup({
+                                options:[
+                                    {val: 'mb', text: 'MB'},
+                                    {val: 'gb', text: 'GB', checked: true}
+                                ], 
+                                label: 'Metric', 
+                                handler: _this._onMetricChange.bind(_this)
+                            });
                     })
                     .onLoadWidget(function() {
-                        console.log('Widget load');
-                        console.log(arguments);
+                        _this.server.on('update', _this._onDataReceived.bind(_this));
                     })
-                    .onResize(_this._resizeFonts.bind(_this))
+                    .onResize(_this._resizeElements.bind(_this))
                     .init();
 
-                    // board.notify('Simple: bad connection');
-                    server.on('widgets/staging-space/change', _this._onDataReceived.bind(_this));
+                    // _this.addServerListener('widgets/staging-space/change', _this._onDataReceived.bind(_this));
+
+                    // VERY VERY VERY DIRTY STAFF...
+                    setTimeout(function(){
+                        _this._resizeElements({width: _this.domElem.width(), height: _this.domElem.height()});
+                    }, 1);
             }
         }
     },
 
-    _resizeFonts: function(){
-        
+    _resizeElements: function(props){
+
+        // console.log('_resizeElements', props);
+
+        if(!this._elementsCached) {this._cacheElements();}
+
+        var valFontSize = props.width > props.height ? props.width / 8 : props.height / 8,
+            valWidth = props.width * 0.9,
+            percentsHeight = (props.width / 10),
+            percentsFontSize = percentsHeight * 0.8,
+            titleLineHeight = (props.height * 0.15),
+            titleFontSize = titleLineHeight * 0.6;
+
+        // console.log(props.width, valWidth, percentsHeight)
+
+        this._titleElement.css({
+            'font-size': titleFontSize + 'px',
+            'line-height': titleLineHeight + 'px'
+        });
+
+        this._valElements.used.css({
+            'font-size': valFontSize + 'px',
+            'width': valWidth + 'px'
+        });
+
+        this._valElements.available.css({
+            'font-size': valFontSize + 'px',
+            'width': valWidth + 'px'
+        });
+
+        this._percentsElements.used.css({
+            'font-size': percentsFontSize + 'px',
+            'height': percentsHeight + 'px',
+            'margin-top': '-' + percentsHeight + 'px',
+            'line-height': percentsHeight + 'px'
+        });
+
+        this._percentsElements.available.css({
+            'font-size': percentsFontSize + 'px',
+            'height': percentsHeight + 'px',
+            'margin-top': '-' + percentsHeight + 'px',
+            'line-height': percentsHeight + 'px'
+        });
     },
 
-    _metric: {
-        label: 'MB',  // Default value...
-        multiplier: 1, // Server returns always in megabytes. We should multiply this value on this coefficient..
-        minDisplayVal: 5, // minimum percents of val, that will be displayed
-        minDisplayPercents: 15,
-        rankToDisplay: 0 // megabytes will not display any numbers after ',' in floats
+    _cacheElements: function() {
 
-    },
+        this._spaceElements['used'] = this._spaceElements['used'] || 
+                                      this.findElem('space', 'type', 'used');
+        this._valElements['used'] = this._valElements['used'] || 
+                                    this.findElem( this._spaceElements['used'], 'value' );
+        this._percentsElements['used'] = this._percentsElements['used'] || 
+                                         this.findElem( this._spaceElements['used'], 'percents' );
+
+        this._spaceElements['available'] = this._spaceElements['available'] || 
+                                           this.findElem('space', 'type', 'available');
+        this._valElements['available'] = this._valElements['available'] || 
+                                         this.findElem( this._spaceElements['available'], 'value' );
+        this._percentsElements['available'] = this._percentsElements['available'] || 
+                                              this.findElem( this._spaceElements['available'], 'percents' );
     
-    // data values 
-    // they update every 'data receieved' event
-    _values: {
-        used: {
-            val: 60000, // always in megabytes
-            percents: 60, // alwayes in percents
-        },
-        available: {
-            val: 40000,
-            percents: 40, 
-        }
+        this._titleElement = this._titleElement || this.findElem('title');
+        this._containerElement = this._containerElement || this.findElem('container');
+
+        this._elementsCached = true;
     },
-
-    _oldValues: {
-        used: {
-            val: 60000, 
-            percents: 60, 
-        },
-        available: {
-            val: 40000, 
-            percents: 40, 
-        }
-    },
-
-    // _fontSize: {
-    //     ofValElements: 20,
-    //     ofPercentsElements: 11
-    // },
-
-    animationTime: 2000, // default animation time in milliseconds
-    _tickTime: 30,
-    _animating: false, // true/false if animation is in process
-    
-    _valueElements: {}, // we will cache here elements, that display values
-    _percentsElements: {}, // we will cache here elements, that display percents
-    _elements: {},
 
     // listener, that triggers every time, when data from the server received
-    _onDataReceived: function(e, data) {
+    _onDataReceived: function(data) {
 
-        this._values.used.val = parseInt(data.used);
-        this._values.available.val = parseInt(data.total) - this._values.used.val;
+        // console.log('data received!', data); 
+
+        this._values.used.val = parseInt(data.used, 10);
+        this._values.available.val = parseInt(data.total, 10) - this._values.used.val;
 
         this._values.used.percents = Math.round( (this._values.used.val / data.total) * 100 );
         this._values.available.percents =  100 - this._values.used.percents;
 
-        console.log('data received:', data.used, data.total-data.used);
-
         this._displayData();
     },
 
-    _onMetricChange: function(metric, elem) {
+    _onMetricChange: function(metric) {
 
-        this._metric.multiplier = (metric === 'mb') ? 1 : 1024;
+        this._metric.divider = (metric === 'mb') ? 1 : 1024;
         this._metric.label = (metric === 'mb') ? 'MB' : 'GB';
         this._metric.rankToDisplay = (metric === 'mb') ? 0 : 1;
 
         // redisplay changes!
-        if (!this._animating) {
+        if(!this._animating) {
             this._displayData();
-        };
+        }
 
     },
 
     _displayData: function(){
 
-        console.log('_values are:', this._values.used.val, this._values.available.val, this._values.used.percents, this._values.available.percents)
-        console.log('_oldValues are:', this._oldValues.used.val, this._oldValues.available.val, this._oldValues.used.percents, this._oldValues.available.percents)
-
         var _this = this,
-            usedEl = this.findElem('space', 'type', 'used'),
-            availableEl = this.findElem('space', 'type', 'available'),
-
-            usedValEl = this.findElem(usedEl, 'value'),
-            availableValEl = this.findElem(availableEl, 'value'),
-            
-            usedPercentsEl = this.findElem(usedEl, 'percents'),
-            availablePercentsEl = this.findElem(availableEl, 'percents')
 
             ticksAmount = Math.round(this.animationTime / this._tickTime), // how many ticks
 
@@ -143,66 +191,53 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
             usedValStep = (this._values.used.val - this._oldValues.used.val) / ticksAmount,
             usedPercentsStep = (this._values.used.percents - this._oldValues.used.percents) / ticksAmount,
             availableValStep = (this._values.available.val - this._oldValues.available.val) / ticksAmount,
-            availablePercentsStep = (this._values.available.percents - this._oldValues.available.percents) / ticksAmount;
+            avPercentsStep = (this._values.available.percents - this._oldValues.available.percents) / ticksAmount;
 
-            console.log('steps:', usedValStep, usedPercentsStep, availableValStep, availablePercentsStep)
+            // console.log('steps:', usedValStep, usedPercentsStep, availableValStep, avPercentsStep)
 
-        if (!_this._animating) {
+        if(!_this._animating) {
             var animation = setInterval(function(){
 
                 _this._animating = true;
 
                 _this._updateElement('used', {
-                    value: (_this._oldValues.used.val += usedValStep) / _this._metric.multiplier,
+                    value: (_this._oldValues.used.val += usedValStep) / _this._metric.divider,
                     percents: _this._oldValues.used.percents += usedPercentsStep
                 });
 
                 _this._updateElement('available', {
-                    value: (_this._oldValues.available.val += availableValStep) / _this._metric.multiplier,
-                    percents: _this._oldValues.available.percents += availablePercentsStep
+                    value: (_this._oldValues.available.val += availableValStep) / _this._metric.divider,
+                    percents: _this._oldValues.available.percents += avPercentsStep
                 });
 
                 // animation end...
-                if (--ticksAmount === 0) {
+                if(--ticksAmount === 0) {
                     _this._animating = false;
                     clearInterval(animation);
                     _this._oldValues = $.extend(true, {}, _this._values); // copying object...
                     // console.log(_this._values.used.val, _this._values.available.val)
                 }
 
-            }, this._tickTime)
+            }, this._tickTime);
         }
     },
 
     _updateElement: function(type, data) {
 
         var value = Number(data.value).toFixed(this._metric.rankToDisplay),
-            percents = Number(data.percents).toFixed(2);
+            percents = Number(data.percents).toFixed(0);
 
-        this._elements[type] = this._elements[type] || this.elem('space', 'type', type);
-        this._valueElements[type] = this._valueElements[type] || this.findElem( this._elements[type], 'value' );
-        this._percentsElements[type] = this._percentsElements[type] || this.findElem( this._elements[type], 'percents' );
+        if(!this._elementsCached){ this._cacheElements(); }
 
-        var valText = this._oldValues[type].percents > this._metric.minDisplayVal ? (value + ' ' + this._metric.label) : '',
+        var valText = this._oldValues[type].percents > this._metric.minDisplayVal ? 
+                      value + ' ' + this._metric.label : '',
             percentsText = this._oldValues[type].percents > this._metric.minDisplayPercents ? percents + ' %' : '';
 
-        this._valueElements[type].text(valText);
-        this._elements[type].height(percents + '%');
+        this._valElements[type].text(valText);
+        this._spaceElements[type].height(percents + '%');
         this._percentsElements[type].text(percentsText);
-
-        
-        // styling percents el...
-        
-        this._percentsElements[type].css({
-            'width': this._elements[type].height(),
-
-            // can we do this on window resize ??
-            'height': '40px',
-            'margin-top': '-40px',
-            'line-height': '40px'
-        })
+        this._percentsElements[type].width(this._spaceElements[type].height());
     }
-
 
 }));
 
