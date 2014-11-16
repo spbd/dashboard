@@ -36,48 +36,48 @@ modules.define(
             },
 
             // lib-states
-            'widgets/lib-states/libs': function() {
+            'widgets/lib-status/libs': function() {
                 return ['Library1', 'Library2'];
             },
-            'widgets/lib-states/lib/Library1': function() {
-                return [
-                    {
-                        branch: 'dev',
-                        state: rnd(1) ? 'success' : 'failed',
-                        build: '23.10.2014 - 10:21'
-                    },
-                    {
-                        branch: 'support/2.x',
-                        state: 'success',
-                        build: '23.10.2014 - 10:21'
-                    }
-                ];
-            },
-            'widgets/lib-states/lib/Library2': function() {
-                return [
-                    {
-                        branch: 'dev',
-                        state: rnd(1) ? 'success' : 'failed',
-                        build: '23.10.2014 - 10:21'
-                    },
-                    {
-                        branch: 'support/2.x',
-                        state: 'success',
-                        build: '23.10.2014 - 10:21'
-                    },
-                    {
-                        branch: 'release/v3.0.0',
-                        state: rnd(1) ? 'success' : 'failed',
-                        build: '23.10.2014 - 10:21'
-                    },
-                    {
-                        branch: 'release/v3.0.1',
-                        state: 'success',
-                        build: '23.10.2014 - 10:21'
-                    }
-                ];
-            },
 
+            'widgets/lib-status/change': function() {
+                return {
+                    'Library1': [
+                        {
+                            name: 'dev',
+                            status: rnd(1) ? 'success' : 'failed',
+                            time: '23.10.2014 - 10:21'
+                        },
+                        {
+                            name: 'support/2.x',
+                            status: 'success',
+                            time: '23.10.2014 - 10:21'
+                        }
+                    ],
+                    'Library2': [
+                        {
+                            name: 'dev',
+                            status: rnd(1) ? 'success' : 'failed',
+                            time: '23.10.2014 - 10:21'
+                        },
+                        {
+                            name: 'support/2.x',
+                            status: 'success',
+                            time: '23.10.2014 - 10:21'
+                        },
+                        {
+                            name: 'release/v3.0.0',
+                            status: rnd(1) ? 'success' : 'failed',
+                            time: '23.10.2014 - 10:21'
+                        },
+                        {
+                            name: 'release/v3.0.1',
+                            status: 'success',
+                            time: '23.10.2014 - 10:21'
+                        }
+                    ]
+                };
+            },
             // Reviewers
             'widgets/reviewers/change': function() {
                 return [
