@@ -1,0 +1,49 @@
+$red = #CB5C5C
+$blue = #5AB6C7
+$grey = #646464
+$lightGrey = #E0DBDB
+$greenGrey = #4F6771
+
+.staging-space
+{
+    &__space
+    {
+      height: 100%;
+      text-align: center;
+      position: relative;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &_type_used
+      {
+        background-color: $red;
+
+        color #fff;
+      }
+
+      &_type_available
+      {
+        background-color: $blue;
+
+        color #fff;
+      }    
+    }
+
+  
+
+    &__percents
+    {
+      position: absolute;
+      top: 0;
+      right: 0;
+      transform: rotate(270deg);
+      transform-origin: 100% 100%;
+
+      border-top: 1px solid $grey;
+
+      font-size: 11px;
+    }
+
+}

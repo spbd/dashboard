@@ -32,6 +32,10 @@ provide(BEMDOM.decl(this.name, {
                     _this._onShowSettingsCb = cb;
                     return API;
                 },
+                onResize: function(cb) {
+                    _this._onResize = cb;
+                    return API;
+                },
                 init: function() {
                     _this._initBaseWidget();
                     return API;
@@ -39,6 +43,15 @@ provide(BEMDOM.decl(this.name, {
             };
 
         return API;
+    },
+
+    _onResizeCallbacks: [],
+
+    _onResize: function() {
+
+        if (typeof this.onResize === 'function') this.onResize();
+        this._cfg.getProp('fontResize') && this._fontResizer();
+
     },
 
     _initBaseWidget: function() {
@@ -73,6 +86,7 @@ provide(BEMDOM.decl(this.name, {
         }
 
         this._cfg.getProp('fontResize') && nextTick(this._recalculateFontsSize.bind(this));
+        this._onResize();
         this._fontResizer = throttle(this._resizeFonts.bind(this), 100);
 
         this.server = new Server(this._id, this.__self._blockName);
@@ -137,11 +151,11 @@ provide(BEMDOM.decl(this.name, {
             h = e.pageY - mv.offsetY;
 
         // Min width and height
-        if(w < 150 || h < 150) {return;}
+        if (w < 150 || h < 150) {return;}
 
         target.elem('container').css({width: w, height: h});
 
-        this._cfg.getProp('fontResize') && this._fontResizer();
+        this._onResize();
     },
 
     _resizeFonts: function() {
