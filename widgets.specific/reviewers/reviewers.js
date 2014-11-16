@@ -20,23 +20,13 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
                             .setProps({width: 200, height: 100})
                             .checkbox({text: 'Hide user', handler: _this._onCheckboxChange.bind(_this)});
                     })
-                    .onLoadWidget(function() {
+                    .onLoadWidget(function(controls) {
                         console.log('server,', _this.server);
                         _this.server.on('update', function(data) {
-                            console.log(data)
+                            console.log('controls: ', controls);
+                            _this._drawContent(controls[0], data);
                         });
-                    })
-
-                    // board.notify('Simple: bad connection');
-                    //
-                    server.on(
-                        'widgets/reviewers/change',
-                        function(e, data) {
-                            // console.log(data);
-                            _this._data = data;
-                            var checked = _this.settings.getStates()[0];
-                            _this._drawContent.call(_this, checked, data);
-                    });
+                    }).init();
             }
         }
     },
@@ -64,6 +54,7 @@ provide(BEMDOM.decl({block: this.name, baseBlock: Widget}, {
 
         // tasks list
         var listItems = data.tasks.map(function(task) {
+            console.log('user: ', task.reviewer.name);
             return BH.apply({
                 block: 'reviewers',
                 elem: 'item',
