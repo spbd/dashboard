@@ -38,7 +38,9 @@ provide(BEMDOM.decl(this.name, {
                 },
                 init: function(cb) {
                     _this._initBaseWidget();
-                    if(typeof _this._onLoadWidgetCb === 'function'){ _this._onLoadWidgetCb(); }
+                    if(typeof _this._onLoadWidgetCb === 'function'){ 
+                        _this._onLoadWidgetCb(_this.settings.getStates()); 
+                    }
                     return API;
                 }
             };
